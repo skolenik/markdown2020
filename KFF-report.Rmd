@@ -1,0 +1,341 @@
+---
+title: "KFF report"
+author: "Stas Kolenikov"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+  word_document:
+    reference_docx: Abt_2018_Report_Template.docx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Setup
+
+R operates via libraries, which are user-contributed collections of R programs
+performing a specific task. For this report, we are going to need:
+
+```{r libraries, message=FALSE, warning=FALSE}
+# to read SPSS files
+library(foreign)
+library(haven)
+# to produce graphics
+library(ggplot2)
+library(RColorBrewer)
+# to process data
+library(tidyverse)
+# to produce neat tables
+library(knitr)
+library(kableExtra)
+# to produce a codebook
+library(vtable)
+# to work with survey data
+library(survey)
+# to abstract directories
+library(here)
+# to process strings
+library(stringr)
+```
+
+Here's a couple of helper functions to compute design effects.
+
+```{r deff_function}
+DEFF <- function(x) ( sum(x*x)*nrow(x)/(sum(x)*sum(x)) )
+# checks
+stopifnot( DEFF(c(1,1,1)) == 1)
+stopifnot( DEFF(c(10,10,10)) == 1)
+stopifnot( DEFF(c(5,0,0)) == 5)
+neff <- function(x) nrow(x)/DEFF(x)
+# checks
+stopifnot( neff(c(1,1,1)) == 3)
+stopifnot( neff(c(10,10,10)) == 3)
+stopifnot( neff(c(5,0,0)) == 1)
+```
+
+## Reading the data
+
+This chunk reads the data and sets the weights up
+
+```{r read_spss}
+KFF_data <- read_spss(here("data","Kaiser Health Tracker Poll_April_Final no rotates.sav"))
+```
+
+Here's a codebook of sorts:
+
+```{r vtable}
+if (interactive()) vtable(KFF_data)
+```
+
+## Generic sample report
+
+```{r svydates}
+# need to preprocess the survey dates from the intvwdate variable
+KFF_data %>% mutate(idate = as.Date(intvwdate,format="%y%m%d")) -> KFF_data
+idate_start <- min(KFF_data$idate)
+idate_end <- max(KFF_data$idate)
+```
+
+This KFF Health Tracking Poll was designed and analyzed 
+by public opinion researchers at the Kaiser Family Foundation (KFF). 
+The survey was conducted from `r format(idate_start,"%B %d, %Y")` to `r format(idate_end,"%B %d, %Y")`, 
+among a nationally representative random digit dial telephone sample of 
+`r format(nrow(KFF_data), big.mark=",")` adults ages 18 and older, living in the United States, 
+including Alaska and Hawaii (note: persons without a telephone could not be included 
+in the random selection process). The sample included 
+`r KFF_data %>% filter(sample07 %in% c(10,11)) %>% summarize(n=n()) %>% unlist()` respondents 
+reached by calling back respondents that had previously completed an interview 
+on the KFF Tracking poll more than nine months ago. 
+Computer-assisted telephone interviews conducted 
+by landline (`r KFF_data %>% filter(sample==1) %>% summarize(n=n()) %>% unlist()`) 
+and cell phone (`r KFF_data %>% filter(sample==2) %>% summarize(n=n()) %>% unlist()`, 
+including (`r KFF_data %>% filter(iphoneuse==3) %>% summarize(n=n()) %>% unlist()` 
+who had no landline telephone) were carried out in English 
+(`r KFF_data %>% filter(lang==1) %>% summarize(n=n()) %>% unlist()`)
+and Spanish (`r KFF_data %>% filter(lang==2) %>% summarize(n=n()) %>% unlist()`).
+
+### MOE table
+
+```{r moe_data}
+KFF_MOE <- rbind(
+  # total
+  tibble(Group="Total", unweighted_n = nrow(KFF_data), 
+         neff = (KFF_data %>% filter(TRUE) %>% select(weight_ssrs) %>% as.vector() %>% neff() )
+         ),
+  # blank line
+  tibble(Group="Party ID", unweighted_n = NA, neff = NA),
+  # party groups
+  tibble(Group="Democrats", unweighted_n = nrow(KFF_data %>% filter(party5 == 1)), 
+         neff = (KFF_data %>% filter(party5 == 1) %>% select(weight_ssrs) %>% as.vector() %>% neff() )
+         ),
+  tibble(Group="Republicans", unweighted_n = nrow(KFF_data %>% filter(party5 == 5)), 
+         neff = (KFF_data %>% filter(party5 == 5) %>% select(weight_ssrs) %>% as.vector() %>% neff() )
+         ),
+  tibble(Group="Independents", unweighted_n = nrow(KFF_data %>% filter(party5 %in% c(2,3,4))), 
+         neff = (KFF_data %>% filter(party5 %in% c(2,3,4)) %>% select(weight_ssrs) %>% as.vector() %>% neff() )
+         ),
+  tibble(Group="Dem-leaning Indeps", unweighted_n = nrow(KFF_data %>% filter(party5 == 2)), 
+         neff = (KFF_data %>% filter(party5 == 2) %>% select(weight_ssrs) %>% as.vector() %>% neff() )
+         ),
+  tibble(Group="Rep-leaning Indeps", unweighted_n = nrow(KFF_data %>% filter(party5 == 4)), 
+         neff = (KFF_data %>% filter(party5 == 4) %>% select(weight_ssrs) %>% as.vector() %>% neff() )
+         )
+)
+KFF_MOE %>% mutate(
+  `N (unweighted)` = if_else(is.na(unweighted_n), "", format(unweighted_n, big.mark=",") ),
+  MOE_num = qnorm(0.975)*sqrt(0.5*0.5/neff),
+  MOE = if_else( is.na(MOE_num), "", paste0("+/- ", round(100*MOE_num,1), " percentage points") )
+  ) -> KFF_MOE
+saveRDS(KFF_MOE,file=here('KFF_MOE.Rds'))
+```
+
+Numbers of respondents and margins of sampling error for key subgroups are shown in the table below. 
+For results based on other subgroups, the margin of sampling error may be higher. 
+
+```{r MOE_table}
+KFF_MOE %>% select(Group, `N (unweighted)`,MOE) -> KFF_MOE_table
+if (is_html_output()) { 
+  KFF_MOE_table %>%  kable() %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+} else KFF_MOE_table
+```
+
+
+## Set the data for weighted analysis
+
+```{r svyset}
+KFF_svy <- svydesign(data=KFF_data, ids= ~id, weight=~weight_ssrs)
+```
+
+## Some plots
+
+### Q1: Congress priorities
+
+Pre-processing the Q1 question text:
+
+```{r Q1}
+tibble(
+  item = c("q1a","q1b","q1c","q1d","q1e","q1f"),
+  long_label = c(
+    attr(KFF_data$q1a,"label"),
+    attr(KFF_data$q1b,"label"),
+    attr(KFF_data$q1c,"label"),
+    attr(KFF_data$q1d,"label"),
+    attr(KFF_data$q1e,"label"),
+    attr(KFF_data$q1f,"label")
+  )
+) %>% mutate(
+  where_ends = str_locate(long_label, " should that be a t")[,1],
+  main_label = 
+    str_replace(
+        str_sub(long_label, end=where_ends), 
+        "I'm going to read you a couple different things Congress may try to do in the coming months.  First, ", "") ) %>% 
+  # improve labels a bit
+  mutate(better_label = str_replace(main_label,"costs for","costs\nfor")) %>%
+  mutate(better_label = str_replace(better_label,"help for those who",
+                                                 "help to include\nmore people who")) %>%
+  mutate(better_label = str_replace(better_label," coverage on the ACA marketplace to include more people","")) %>%
+  mutate(better_label = str_replace(better_label," high out-of-network medical","")) %>%
+  mutate(better_label = str_replace(better_label,", in which all Americans would get their insurance from a single government plan","")) %>%
+  mutate(better_label = if_else(item=="q1f","1F. Continuing ACA protections for people\nwith pre-existing conditions",better_label) ) %>%
+  mutate(better_label = str_replace(better_label, "insurance from", "insurance\nfrom ") ) %>%
+  mutate(better_label = str_replace(better_label, "2010 Affordable Care Act", "ACA") ) %>%
+  select( -long_label, -where_ends ) %>%
+  as.tibble() -> q1_battery 
+if (is_html_output()) {
+  q1_battery %>% kable() %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+} else q1_battery
+```
+
+Weighted estimates:
+```{r q1_results, warning=FALSE}
+q1_svy <- svymean( design = KFF_svy, 
+    x = ~ as.factor(q1a) + as.factor(q1b) + as.factor(q1c) + as.factor(q1d) + as.factor(q1e) + as.factor(q1f))
+enframe(q1_svy, name = "long_name", value = "estimate") %>%
+  mutate(shorter_name = str_replace(long_name,"as.factor","") ) %>%
+  separate(shorter_name,into=c("blank","item","category")) %>%
+  select(-long_name,-blank) %>% 
+  mutate(category = as.integer(category)) -> q1_results
+```
+
+Determine the ordering of items to plot, from smallest to largest on the "Top priority" category:
+
+```{r q1_order}
+q1_results %>% filter(category==1) %>% 
+  arrange(estimate) %>% 
+  inner_join(q1_battery, by="item") %>%
+  select(better_label) %>% unlist() -> q1_order
+```
+
+```{r q1_toplot, warning=FALSE, message=FALSE}
+q1_results %>% filter( category < 5) %>%
+  arrange(item,category) %>%
+  group_by(item) %>%
+  mutate(cat_label = case_when(
+    category == 1 ~ "Top priority",
+    category == 2 ~ "Important but not top priority",
+    category == 3 ~ "Not too important",
+    category == 4 ~ "Should not be done"
+  ),
+  Responses = factor(cat_label,levels=c(
+    "Should not be done", "Not too important", "Important but not top priority", "Top priority"
+  ), ordered=TRUE ),
+  estimate = estimate * 100,
+  est0 = round(estimate,0),
+  cum_pct = cumsum(estimate),
+  text_pos = cum_pct - estimate/2
+  ) %>% 
+  inner_join(q1_battery %>% select(item,main_label,better_label),by="item") %>%
+  mutate( Items = factor(better_label,levels=q1_order, ordered = TRUE) ) %>% 
+  as.tibble() -> q1_results_toplot
+q1_results_toplot
+```
+
+
+Plotting these results:
+
+```{r q1_plot, fig.width=6.5, fig.height=3.5}
+q1plot <- ggplot(data=q1_results_toplot, aes(x=Items,fill=Responses)) + 
+  geom_bar(aes(weight=estimate)) + # bars themselves
+  geom_text(aes(label=est0,y=text_pos)) + # add % to the bars
+  coord_flip() + # make horizontal bars
+#  scale_fill_brewer(palette='Blues',
+  scale_fill_manual(values=c('#c0e6ff','#43b4ff','#0076c3','#005791'),
+                    breaks=c("Top priority","Important but not top priority",
+                             "Not too important","Should not be done")
+                    , guide = guide_legend(nrow=1)
+                    ) + 
+  theme_light() + # white background, light grey lines
+  ggtitle("\n\n") + # need this to make space for the legend
+  theme(legend.position = c(0,1), legend.justification = c(0.52,0),  # modify where the legend is
+        axis.text.x = element_text(size=rel(0.8))) +              # scale category labels
+  geom_hline(yintercept=50,linetype="dashed",color="lightgrey") + # middle 50% line
+  ylab("Percentage") 
+q1plot
+saveRDS(q1plot, file=here('q1plot.Rds') )
+```
+
+### Q6: overturn ACA
+
+Item Q6 asks: `r attr(KFF_data$q6,"label")`.
+Its response options are: `r attr(KFF_data$q6,"labels")`.
+
+Estimates broken down by party:
+
+```{r q6_estimates}
+svymean(~interaction(as.factor(q6),as.factor(party5)),design=KFF_svy,na.rm=TRUE) %>% 
+  as.data.frame() %>% rownames_to_column(var="coefname") %>% 
+  mutate(coefname=str_replace(coefname,fixed("interaction(as.factor(q6), as.factor(party5))"),"")) %>% 
+  select(-SE) %>% rename(prop_cell = mean) %>%
+  separate(coefname,into=c('q6','party5')) %>% 
+  mutate(party3 = if_else(party5 %in% c('1','5','9'),party5,'3')) %>%
+  group_by(party3) %>%mutate(denom = sum(prop_cell)) %>%
+  ungroup() %>% group_by(party3,q6) %>% 
+  mutate(prop_within_party = sum(prop_cell)/denom) %>% 
+  ungroup() %>% group_by(q6) %>% mutate(prop_overall=sum(prop_cell)) %>%
+  ungroup() ->
+  q6_results
+q6_results
+```
+
+Prepare the object to be plotted:
+
+```{r q6_toplot}
+q6_results %>% filter(q6<=2,party5!='9') %>% 
+  mutate(party3=if_else(party5=='2','0',party3)) %>% # fake the total from one of the categories
+  filter(party5 != 4) %>%
+  mutate(estimate = if_else(party3=='0',prop_overall,prop_within_party)) %>%
+  select(q6,party3,estimate) %>%
+  arrange(party3) %>%
+  spread(key=q6,value=estimate) %>%
+  mutate(`3` = 1-`2`) %>%
+  gather(key='q6',value='estimate',`3`,`1`,`2`) %>%
+  mutate(party_label=case_when(
+    party3 == '1' ~ 'Democrats',
+    party3 == '0' ~ 'Total',
+    party3 == '5' ~ 'Republicans',
+    party3 == '3' ~ 'Independents'
+  )  ) %>% arrange(party3,q6) %>%
+  group_by(party3) %>%
+  mutate(  cum_pct = cumsum(estimate),text_pos = 1+ sign(1.5-as.integer(q6))*(estimate/2),
+           text_to_plot = if_else(q6=='3','',as.character(round(estimate*100))),
+           q6_labeled = case_when(
+             q6 == '3' ~ '',
+             q6 == '1' ~ 'Overturn the ACA',
+             q6 == '2' ~ 'Do not overturn'
+           )) %>%
+  as.tibble() -> q6_toplot  
+q6_toplot
+```
+
+Plot the results
+
+```{r q6plot}
+q6plot <- ggplot(data=q6_toplot, aes(x=party_label,fill=q6)) + 
+  geom_bar(aes(weight=estimate)) + # bars themselves
+  geom_text(aes(label=text_to_plot,y=text_pos),colour='white') + # add % to the bars
+  theme_minimal() + # white background, light grey lines
+  theme(legend.position = 'top',  # modify where the legend is
+        axis.text.x = element_text(size=rel(0.8)),               # scale category labels
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + # remove grides
+  scale_y_continuous(labels=rep('',5)) + # another attempt to remove ticks and labels from the % axis
+  coord_flip() + # make horizontal bars
+#  scale_fill_brewer(palette='Blues',
+  scale_fill_manual(values=c('#005791','#f5821f','white'),
+                    breaks=c("Overturn","Don't overturn","")
+                    , guide = guide_legend(nrow=1)
+                    ) + 
+  ggtitle("\n\n") + # need this to make space for the legend
+  geom_hline(yintercept=1,linetype="dashed",color="lightgrey") + # middle 50% line
+  ylab("Percentage") + xlab("Party affiliatin")
+q6plot
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax 
+for authoring HTML, PDF, and MS Word documents. 
+For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
