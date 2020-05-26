@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     df_print: paged
+    code_folding: show
   word_document:
     reference_docx: Abt_2018_Report_Template.docx
 ---
@@ -12,11 +13,6 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## R Setup
-
-R operates via libraries, which are user-contributed collections of R programs
-performing a specific task. For this report, we are going to need:
 
 ```{r libraries, message=FALSE, warning=FALSE}
 # to read SPSS files
@@ -30,6 +26,7 @@ library(tidyverse)
 # to produce neat tables
 library(knitr)
 library(kableExtra)
+library(flextable)
 # to produce a codebook
 library(vtable)
 # to work with survey data
@@ -39,8 +36,6 @@ library(here)
 # to process strings
 library(stringr)
 ```
-
-Here's a couple of helper functions to compute design effects.
 
 ```{r deff_function}
 DEFF <- function(x) ( sum(x*x)*nrow(x)/(sum(x)*sum(x)) )
@@ -55,17 +50,11 @@ stopifnot( neff(c(10,10,10)) == 3)
 stopifnot( neff(c(5,0,0)) == 1)
 ```
 
-## Reading the data
-
-This chunk reads the data and sets the weights up
-
 ```{r read_spss}
-KFF_data <- read_spss(here("data","Kaiser Health Tracker Poll_April_Final no rotates.sav"))
+KFF_data <- haven::read_spss(here("data","Kaiser Health Tracker Poll_April_Final no rotates.sav"))
 ```
 
-Here's a codebook of sorts:
-
-```{r vtable}
+```{r vtable, warning=FALSE}
 if (interactive()) vtable(KFF_data)
 ```
 
@@ -143,8 +132,6 @@ if (is_html_output()) {
 ```
 
 
-## Set the data for weighted analysis
-
 ```{r svyset}
 KFF_svy <- svydesign(data=KFF_data, ids= ~id, weight=~weight_ssrs)
 ```
@@ -153,9 +140,10 @@ KFF_svy <- svydesign(data=KFF_data, ids= ~id, weight=~weight_ssrs)
 
 ### Q1: Congress priorities
 
-Pre-processing the Q1 question text:
+Shortened labels for plotting:
 
 ```{r Q1}
+# pre-processing for Q1
 tibble(
   item = c("q1a","q1b","q1c","q1d","q1e","q1f"),
   long_label = c(
@@ -183,7 +171,7 @@ tibble(
   mutate(better_label = str_replace(better_label, "insurance from", "insurance\nfrom ") ) %>%
   mutate(better_label = str_replace(better_label, "2010 Affordable Care Act", "ACA") ) %>%
   select( -long_label, -where_ends ) %>%
-  as.tibble() -> q1_battery 
+  as_tibble() -> q1_battery 
 if (is_html_output()) {
   q1_battery %>% kable() %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 } else q1_battery
@@ -200,9 +188,9 @@ enframe(q1_svy, name = "long_name", value = "estimate") %>%
   mutate(category = as.integer(category)) -> q1_results
 ```
 
-Determine the ordering of items to plot, from smallest to largest on the "Top priority" category:
 
 ```{r q1_order}
+# Determine the ordering of items to plot, from smallest to largest on the "Top priority" category:
 q1_results %>% filter(category==1) %>% 
   arrange(estimate) %>% 
   inner_join(q1_battery, by="item") %>%
@@ -229,14 +217,20 @@ q1_results %>% filter( category < 5) %>%
   ) %>% 
   inner_join(q1_battery %>% select(item,main_label,better_label),by="item") %>%
   mutate( Items = factor(better_label,levels=q1_order, ordered = TRUE) ) %>% 
-  as.tibble() -> q1_results_toplot
-q1_results_toplot
+  as_tibble() -> q1_results_toplot
+if (is_html_output()) {
+  q1_results_toplot %>% select(item, better_label, estimate, Responses) %>% kable(digits=2) %>%
+    collapse_rows(columns=1:2, valign='top') %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+} else {
+  q1_results_toplot %>% select(item, better_label, estimate, Responses) %>% kable(digits=2)
+}
 ```
 
 
-Plotting these results:
 
 ```{r q1_plot, fig.width=6.5, fig.height=3.5}
+# plotting these results
 q1plot <- ggplot(data=q1_results_toplot, aes(x=Items,fill=Responses)) + 
   geom_bar(aes(weight=estimate)) + # bars themselves
   geom_text(aes(label=est0,y=text_pos)) + # add % to the bars
@@ -277,12 +271,12 @@ svymean(~interaction(as.factor(q6),as.factor(party5)),design=KFF_svy,na.rm=TRUE)
   ungroup() %>% group_by(q6) %>% mutate(prop_overall=sum(prop_cell)) %>%
   ungroup() ->
   q6_results
-q6_results
+q6_results %>% kable(digits=4)
 ```
 
-Prepare the object to be plotted:
 
 ```{r q6_toplot}
+# Prepare the object to be plotted:
 q6_results %>% filter(q6<=2,party5!='9') %>% 
   mutate(party3=if_else(party5=='2','0',party3)) %>% # fake the total from one of the categories
   filter(party5 != 4) %>%
@@ -306,11 +300,9 @@ q6_results %>% filter(q6<=2,party5!='9') %>%
              q6 == '1' ~ 'Overturn the ACA',
              q6 == '2' ~ 'Do not overturn'
            )) %>%
-  as.tibble() -> q6_toplot  
-q6_toplot
+  as_tibble() -> q6_toplot  
+# q6_toplot %>% kable()
 ```
-
-Plot the results
 
 ```{r q6plot}
 q6plot <- ggplot(data=q6_toplot, aes(x=party_label,fill=q6)) + 
@@ -329,7 +321,7 @@ q6plot <- ggplot(data=q6_toplot, aes(x=party_label,fill=q6)) +
                     ) + 
   ggtitle("\n\n") + # need this to make space for the legend
   geom_hline(yintercept=1,linetype="dashed",color="lightgrey") + # middle 50% line
-  ylab("Percentage") + xlab("Party affiliatin")
+  ylab("Percentage") + xlab("Party affiliation")
 q6plot
 ```
 
