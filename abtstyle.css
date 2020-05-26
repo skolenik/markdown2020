@@ -1,0 +1,108 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.gdbar img {
+  width: 300px !important;
+  height: 150px !important;
+  margin: 8px 8px;
+}
+
+.gdbar {
+  width: 400px !important;
+  height: 180px !important;
+}
+
+/* title */
+.title-slide hgroup h1 {
+  font-size: 40px;
+  line-height: 1.4;
+  color: #ee3123;
+  margin-right: 30px;
+  letter-spacing: 0.5px;
+}
+	  
+/* subtitle */	  
+.title-slide hgroup h2 {
+  font-size: 20px;
+  line-height: 35px;
+  color: #ee3123;
+  background-color: #FFFFFF;
+  margin-right: 30px;
+  letter-spacing: 0.5px;
+  min-height: 1px;
+}
+	  
+h1 {
+  font-size: 50px;
+  line-height: 65px;
+  color: #ee3123;
+  font-weight: 600;
+}
+	  
+h2 {
+  font-size: 45px;
+  line-height: 55px;
+  background-color: #ee3123;
+  color: #FFFFFF;
+  font-weight: 600;
+  padding-left: 10px;
+  min-height: 75px;
+  vertical-align: middle;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #DFD1A7}
+
+tr:nth-child(odd){background-color: #D0D3D4}
+
+tr:header {
+    background-color: #789D4A;
+    color: #FFFFFF;
+}
+
+th thead {
+    text-align: left;
+    padding: 8px;
+    background-color: #7566A0;
+    color: #FFFFFF;
+}
+
+.rmdtable th {
+    text-align: left;
+    padding: 8px;
+    background-color: #7566A0;
+    color: #FFFFFF;
+}
+
+.rmdtable .header th {
+    text-align: left;
+    padding: 8px;
+    background-color: #7566A0;
+    color: #FFFFFF;
+}
+
+.rmdtable tbody tr.header th {
+    text-align: left;
+    padding: 8px;
+    background-color: #7566A0;
+    color: #FFFFFF;
+}
+
+body {
+  font-family: 'Gotham';
+}
+
+slides > slide:not(.nobackground):before {
+  width: 160px;
+  height: 80px;
+  background-size: 160px 80px;
+}
