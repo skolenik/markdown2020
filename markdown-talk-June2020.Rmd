@@ -18,12 +18,29 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(here)
+library(knitr)
 library(kableExtra)
+library(flextable)
 library(tidyverse)
 library(xaringanthemer)
 library(shiny)
+library(countdown)
 solarized_dark()
 ```
+
+## Purpose
+
+1. Introduce Markdown as a bare bones text-only format that allows to format text,
+   insert links, insert images.
+2. Introduce RMarkdown as a tool to weave together text and analysis (tables, figures,
+   plots, individual numbers).
+3. Demonstrate other uses of Markdown (Stata, Python notebooks, diagrams)
+4. Demonstrate flexible / reproducible report generation with Markdown templates
+   and input parameters.
+
+Helpful upfront knowledge: some R; some HTML
+
+---
 
 ## Why I am here
 
@@ -35,7 +52,7 @@ by summarizing results in Stata with the likes of
 ```
 for j=1/5 {
   sum beta`k'
-  file write " & " (r(mean)) " & " (r(se) )
+  file write " & " (r(mean)) " & " (r(sd) )
   count if abs( (beta`k' - true_beta`k')/se_beta`k' ) < invnorm(0.975)
   file write " & " (r(N)/_N*100) "\% \\" _n
 }
@@ -72,7 +89,7 @@ https://learn.r-journalism.com/en/publishing/
 ## Building blocks of my workflow
 
 - RMarkdown
-- R tidyverse
+- R tidyverse (pipes!)
 - Version control
 - Cheat sheets
 
@@ -82,9 +99,30 @@ Nicely packaged within RStudio
 
 ---
 
+## Copy-paste vs. markdown
+
+![](docs/copy-paste.jfif)
+
+---
+
 ## Markdown
 
 ![](docs/markdown-everywhere.jpg)
+
+---
+
+## Examples
+
+Books in markdown: http://bookdown.org, https://r4ds.had.co.nz/
+
+Dashboards in R markdown: [CRAN download gauge](https://gallery.shinyapps.io/cran-gauge/)
+
+Diagrams: [Typora diagrams](http://support.typora.io/Draw-Diagrams-With-Markdown/)
+
+Markdowns with several languages: [ICHPS 2020 Complex Surveys](
+https://htmlpreview.github.io/?https://github.com/skolenik/ICHPS2020-svy/blob/master/ichps2020-svy.html)
+
+Browser presentations: this webinar (show [the source](markdown-talk-June2020.Rmd)!)
 
 ---
 
@@ -131,15 +169,19 @@ Text in **bold**
 
 1. Go to [SlackEdit](https://stackedit.io/app#) online editor.
 2. Open/create a new file (click `r icon('folder', lib='font-awesome')` to open the file menu).
-3. Enter the following with formatting:
+3. Enter the following in the editor with formatting, watch the rendered version in the right pane:
 
-# This is my first markdown file.
+# Header 1: This is my first markdown file.
 
 Hi, I am **Stas** _Kolenikov_. I use Markdown to:
 
 - create simple documents
     + take notes
     + make to-do lists
+
+```{r exercise1_timer}
+countdown(minutes=5)
+```
 
 ---
 
@@ -162,49 +204,42 @@ Hi, I am **FirstName** _LastName_. I am using Markdown to:
 Additionally, R and some other languages can 
 
 - incorporate source code 
-- incorporate theoutput, such as numbers, tables, and plots
+- incorporate the output, such as numbers, tables, and plots
 
 ... into Markdown documents
 
-[Simplified KFF report](KFF-report.html)
+```` 
+```{r} 
 
+# some code here
 
----
-
-## Parametric markdown documents
-
-The most advanced forms of markdown documents use inputs/parameters.
-
-- Output format: HTML (the most flexible, and the only interactive), Word, PDF (requires LaTeX)
-- Task to perform: analysis vs. reporting the results
-- Input data files
+``` 
+````
 
 ---
 
-## Copy-paste vs. markdown
+## Tidy pipes 
 
-![](docs/copy-paste.jfif)
+![](docs/magritr.png)
+
+R `library(magritr)` introduced a pipe operator `%>%` that allows stringing 
+of manipulations / adjustment of formatting options. It helps isolating steps
+in data prep, analysis, and creation of graphs (`library(ggplot2)` although it uses
+`+` for piping) and tables.
+
+[Treachery of Images](https://en.wikipedia.org/wiki/The_Treachery_of_Images)
 
 ---
 
-## Version control
+## KFF tracking poll
 
-![](docs/rainman.jpg)
+[Simplified KFF report: source](KFF-report.Rmd)
+
+[Simplified KFF report: rendered](KFF-report.html)
 
 ---
 
-## Version control
-
-This talk:
-
-https://github.com/skolenik/markdown2020
-
-VCS training, of sorts (~1.5 hrs)
-
-https://github.com/skolenik/shower-vcs
-
-
-## Cheatsheets
+## To learn more: cheatsheets
 
 https://www.rstudio.com/resources/cheatsheets/
 
@@ -222,7 +257,6 @@ library(ggplot2)
 
 and a myriad of extentions to it.
 
-
 ---
 
 ## Tables
@@ -238,73 +272,224 @@ A lot of output looks like a table already: regression results, cross-tabs
 ```
 # aimed at HTML
 library(kableExtra)
-# aimed specifically at MS products
+# aimed more at MS products
 library(flextable)
 ```
 
 ---
 
-## Resources on R
+## library(kableExtra)
 
-- RStudio
-- R4DS
-- Twitter `#rstats`
-- Online forums
+Compared to others, produces much nicer tables in HTML, but MS Word breaks down.
 
----
+```{r MOE_kableExtra}
+readRDS(here('KFF_MOE.Rds')) %>% 
+  mutate(`N (unweighted)` = cell_spec(`N (unweighted)`, "html", 
+                            font_size = spec_font_size(neff) ) ) %>% # fancy sample size
+  select(Group, `N (unweighted)`,MOE) %>%  
+  kable(escape=FALSE) %>% 
+  row_spec(0,color='white',background="#48A9C5") %>%  # header colors
+  row_spec(2,align="center") %>%                      # put "Party ID" in the center
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
 
-## RStudio
-
-https://resources.rstudio.com/webinars
-
-I recommend:
-- RStudio IDE (3 webinars)
-- Getting data into R
-- Writing code (Programming Part 1)
-- Data wrangling
-- Interactive reporting
-- Managing (3 webinars)
-
-That's ~10 hours of pure learning
-
-[RStudio 2020 Conference](http://www.rstd.io/conf): San Francisco, January 27-30.
+[Documentation vignette: ]
+(https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)
 
 ---
 
-## R4DS
+## library(flextable)
 
-<img src=r4ds.png height='250'>
+Compared to others, produces reasonably nice table in both HTML and MS Word.
 
-- Published book
-- Online book: https://r4ds.had.co.nz/
-- Markdown source: https://github.com/hadley/r4ds
-
-- Online community: https://www.rfordatasci.com/ (@r4dscommunity)
-
-Try going 1 chapter/week
-
----
-
-## Stackoverflow
-
-https://stackoverflow.com/questions/tagged/r
+```{r MOE_flextable}
+readRDS(here('KFF_MOE.Rds')) %>% 
+  select(Group, `N (unweighted)`,MOE) %>%  
+  flextable() %>%             # convert to flextable
+  align(j=1,align="left") %>%         # change alignment
+  align(i=2,j=1,align="center") %>%   # put "Party ID" in the center
+  bg(bg="#48A9C5", part="header") %>% # header colors
+  color(color="white", part="header") %>%
+  bg(bg="white", part="body") %>%
+  autofit()                           # some magic in column widths
+```
 
 ---
 
-## Twitter
+## R chunk options
 
-This is where I learned the most: follow `#rstats` tag (or @rstatstweet that RTs stuff)
+```` 
+```{r ChunkName, echo=FALSE} 
 
-https://twitter.com/hashtag/rstats?f=tweets&vertical=default&src=hash&lang=en
+# some code here that I don't want to see in the final output
 
+``` 
+````
+
+Review the chunk options in [RStudio cheatsheet]
+(https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf)
 
 ---
 
-## Code version control in R
+## Parametric markdown documents
 
-https://happygitwithr.com/ by @JennyBryan
+The more advanced forms of markdown documents use inputs/parameters.
 
-- a reasonably complete introduction to using Git with RStudio
+- Output format: HTML (the most flexible, and the only interactive), Word, PDF (requires LaTeX)
+- Task to perform: analysis vs. reporting the results
+- Input data files
+- Formatting specifications (e.g. digits to report)
+
+Parametric markdowns are to be used from command line / R scripts:
+
+```
+rmarkdown::render( ..., params=list(todo='analysis',
+    input_data='KFF-April2019.sav'))
+```
+
+---
+
+## Parametric markdown: output
+
+```
+filename_stub <- 'MyReport'
+rmarkdown::render(input=paste0(filename_stub,.'Rmd'),   # input file
+  output_file=I(paste0(filename_stub,'-',Sys.Date())),  
+         # output file with date embedded, no extension
+  output_format='docx_document')                        
+         # output format and extension
+  # output_format='html_document')                      
+         # alternative output format
+)  
+```
+
+---
+
+## Parametric markdown: YAML header
+
+```
+title: "Reproducible report generation using Markdown"
+author: "Stas Kolenikov"
+date: Sys.Date()
+output:
+  html_output:
+    code_folding: hide
+    toc: TRUE
+  word_document:
+    reference_docx: Abt_2018_Report_Template.docx
+```
+
+---
+
+## Parametric markdown: YAML header
+
+```
+title: "Reproducible report generation using Markdown"
+author: "Stas Kolenikov"
+date: Sys.Date()
+params:
+  todo: analysis
+  # todo: reporting
+  data_source: April2019.dta
+  # data_source: Mar2019.dta
+  digits: 4
+```
+
+---
+
+## Parametric markdown: tasks to do
+
+````
+```r long_analysis
+if (params$todo=="analysis") {
+  # mixed modeling code that takes hours to execute
+  model1 <- ...
+  saveRDS(model1, file='model1.Rds')
+} else if (params$todo=="reporting") {
+  model1 <- readRDS(file='model1.Rds')
+}
+```
+````
+
+---
+
+## Parametric markdown: varying data sources
+
+Explicit naming:
+
+````
+
+---
+params:
+  data_source: KFF-April2019.sav
+---
+```r read_data
+main_data <- read.sav( params$data_source )
+```
+
+````
+
+---
+
+## Parametric markdown: varying data sources
+
+Combining parts:
+
+````
+
+---
+params:
+  month: April
+---
+
+```r read_data_by_month
+main_data <- read.sav( paste0( 'KFF-',params$month, '2019.sav' ) )
+```
+
+````
+
+Which can be rendered with
+
+```
+filename_stub <- 'MyReport'
+month         <- 'April'
+rmarkdown::render(input=paste0(filename_stub,.'Rmd'),   # input file
+  output_file=I(paste0(filename_stub,'-',month,'-',Sys.Date())),  
+  output_format='docx_document'),                       # output format
+  params=list(month=month)                              # pass parameters
+)
+```
+
+---
+
+## Reasons for markdown
+
+1. Combine narrative and data analysis
+2. Reproduce your work (reports, revisions)
+3. Reuse the code with different options, sources, formatting, ...
+4. Version control over the plain text
+
+---
+
+## Reasons for markdown: version control
+
+![](docs/rainman.jpg)
+
+---
+
+## Version control
+
+This talk:
+
+- https://github.com/skolenik/markdown2020
+
+VCS training, of sorts (~1.5 hrs)
+
+- https://github.com/skolenik/shower-vcs
+
+A complete introduction to using Git with RStudio
+
+- https://happygitwithr.com/ by @JennyBryan
 
 ---
 
@@ -312,7 +497,6 @@ https://happygitwithr.com/ by @JennyBryan
 
 Gradual, incremental changes
 
-- a chapter of R4DS/week
 - convert a section / 3-5 tables/plots to R per monthly report
     * ask "how do I" questions on Twitter, and/or
     * ask "how do I" questions on RStudio community
@@ -331,6 +515,24 @@ Early on:
 Intermediate to advanced:
 - Labeled integers vs. strings vs. factor variables
 - Package versioning and management
+
+---
+
+## Markdown in other languages
+
+Stata: markstat
+
+---
+
+## Markdown in other languages
+
+Python: markdown cells in notebooks
+
+---
+
+## Markdown in other languages
+
+Diagrams: `mermaid` in Typora
 
 ---
 

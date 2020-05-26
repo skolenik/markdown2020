@@ -6,7 +6,11 @@
     <meta name="author" content="Stas Kolenikov" />
     <link href="libs/font-awesome-5.3.1/css/all.min.css" rel="stylesheet" />
     <link href="libs/font-awesome-5.3.1/css/v4-shims.min.css" rel="stylesheet" />
+    <link href="libs/countdown-0.3.3/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown-0.3.3/countdown.js"></script>
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+    <script src="libs/tabwid-1.0.0/tabwid.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -22,6 +26,20 @@ class: center, middle, inverse, title-slide
 
 
 
+## Purpose
+
+1. Introduce Markdown as a bare bones text-only format that allows to format text,
+   insert links, insert images.
+2. Introduce RMarkdown as a tool to weave together text and analysis (tables, figures,
+   plots, individual numbers).
+3. Demonstrate other uses of Markdown (Stata, Python notebooks, diagrams)
+4. Demonstrate flexible / reproducible report generation with Markdown templates
+   and input parameters.
+
+Helpful upfront knowledge: some R; some HTML
+
+---
+
 ## Why I am here
 
 1996: learned LaTeX by forcing myself to do Econ homeworks
@@ -32,7 +50,7 @@ by summarizing results in Stata with the likes of
 ```
 for j=1/5 {
   sum beta`k'
-  file write " &amp; " (r(mean)) " &amp; " (r(se) )
+  file write " &amp; " (r(mean)) " &amp; " (r(sd) )
   count if abs( (beta`k' - true_beta`k')/se_beta`k' ) &lt; invnorm(0.975)
   file write " &amp; " (r(N)/_N*100) "\% \\" _n
 }
@@ -69,7 +87,7 @@ https://learn.r-journalism.com/en/publishing/
 ## Building blocks of my workflow
 
 - RMarkdown
-- R tidyverse
+- R tidyverse (pipes!)
 - Version control
 - Cheat sheets
 
@@ -79,9 +97,30 @@ Nicely packaged within RStudio
 
 ---
 
+## Copy-paste vs. markdown
+
+![](docs/copy-paste.jfif)
+
+---
+
 ## Markdown
 
 ![](docs/markdown-everywhere.jpg)
+
+---
+
+## Examples
+
+Books in markdown: http://bookdown.org, https://r4ds.had.co.nz/
+
+Dashboards in R markdown: [CRAN download gauge](https://gallery.shinyapps.io/cran-gauge/)
+
+Diagrams: [Typora diagrams](http://support.typora.io/Draw-Diagrams-With-Markdown/)
+
+Markdowns with several languages: [ICHPS 2020 Complex Surveys](
+https://htmlpreview.github.io/?https://github.com/skolenik/ICHPS2020-svy/blob/master/ichps2020-svy.html)
+
+Browser presentations: this webinar (show [the source](markdown-talk-June2020.Rmd)!)
 
 ---
 
@@ -128,15 +167,19 @@ Text in **bold**
 
 1. Go to [SlackEdit](https://stackedit.io/app#) online editor.
 2. Open/create a new file (click <i class="fa fa-folder"></i> to open the file menu).
-3. Enter the following with formatting:
+3. Enter the following in the editor with formatting, watch the rendered version in the right pane:
 
-# This is my first markdown file.
+# Header 1: This is my first markdown file.
 
 Hi, I am **Stas** _Kolenikov_. I use Markdown to:
 
 - create simple documents
     + take notes
     + make to-do lists
+
+<div class="countdown" id="timer_5ecd50a9" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
 
 ---
 
@@ -159,49 +202,38 @@ Hi, I am **FirstName** _LastName_. I am using Markdown to:
 Additionally, R and some other languages can 
 
 - incorporate source code 
-- incorporate theoutput, such as numbers, tables, and plots
+- incorporate the output, such as numbers, tables, and plots
 
 ... into Markdown documents
 
-[Simplified KFF report](KFF-report.html)
+```` 
 
-
----
-
-## Parametric markdown documents
-
-The most advanced forms of markdown documents use inputs/parameters.
-
-- Output format: HTML (the most flexible, and the only interactive), Word, PDF (requires LaTeX)
-- Task to perform: analysis vs. reporting the results
-- Input data files
+````
 
 ---
 
-## Copy-paste vs. markdown
+## Tidy pipes 
 
-![](docs/copy-paste.jfif)
+![](docs/magritr.png)
+
+R `library(magritr)` introduced a pipe operator `%&gt;%` that allows stringing 
+of manipulations / adjustment of formatting options. It helps isolating steps
+in data prep, analysis, and creation of graphs (`library(ggplot2)` although it uses
+`+` for piping) and tables.
+
+[Treachery of Images](https://en.wikipedia.org/wiki/The_Treachery_of_Images)
 
 ---
 
-## Version control
+## KFF tracking poll
 
-![](docs/rainman.jpg)
+[Simplified KFF report: source](KFF-report.Rmd)
+
+[Simplified KFF report: rendered](KFF-report.html)
 
 ---
 
-## Version control
-
-This talk:
-
-https://github.com/skolenik/markdown2020
-
-VCS training, of sorts (~1.5 hrs)
-
-https://github.com/skolenik/shower-vcs
-
-
-## Cheatsheets
+## To learn more: cheatsheets
 
 https://www.rstudio.com/resources/cheatsheets/
 
@@ -209,14 +241,13 @@ https://www.rstudio.com/resources/cheatsheets/
 
 ## Graphics
 
-![](markdown-talk-June2020_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+![](markdown-talk-June2020_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 
 ```
 library(ggplot2)
 ```
 
 and a myriad of extentions to it.
-
 
 ---
 
@@ -274,73 +305,242 @@ A lot of output looks like a table already: regression results, cross-tabs
 ```
 # aimed at HTML
 library(kableExtra)
-# aimed specifically at MS products
+# aimed more at MS products
 library(flextable)
 ```
 
 ---
 
-## Resources on R
+## library(kableExtra)
 
-- RStudio
-- R4DS
-- Twitter `#rstats`
-- Online forums
+Compared to others, produces much nicer tables in HTML, but MS Word breaks down.
+
+&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;color: white !important;background-color: #48A9C5 !important;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:left;color: white !important;background-color: #48A9C5 !important;"&gt; N (unweighted) &lt;/th&gt;
+   &lt;th style="text-align:left;color: white !important;background-color: #48A9C5 !important;"&gt; MOE &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     font-size: 16px;"&gt;1,203&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; +/- 3.3 percentage points &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;text-align: center;"&gt; Party ID &lt;/td&gt;
+   &lt;td style="text-align:left;text-align: center;"&gt; &lt;span style="     font-size: 12px;"&gt;&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;text-align: center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Democrats &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     font-size: 9px;"&gt;  342&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; +/- 6.2 percentage points &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Republicans &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     font-size: 9px;"&gt;  273&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; +/- 6.9 percentage points &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Independents &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     font-size: 11px;"&gt;  544&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; +/- 4.9 percentage points &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Dem-leaning Indeps &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     font-size: 8px;"&gt;  199&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; +/- 8.3 percentage points &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rep-leaning Indeps &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     font-size: 8px;"&gt;  181&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; +/- 8.4 percentage points &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+[Documentation vignette: ]
+(https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)
 
 ---
 
-## RStudio
+## library(flextable)
 
-https://resources.rstudio.com/webinars
+Compared to others, produces reasonably nice table in both HTML and MS Word.
 
-I recommend:
-- RStudio IDE (3 webinars)
-- Getting data into R
-- Writing code (Programming Part 1)
-- Data wrangling
-- Interactive reporting
-- Managing (3 webinars)
-
-That's ~10 hours of pure learning
-
-[RStudio 2020 Conference](http://www.rstd.io/conf): San Francisco, January 27-30.
+<div class="tabwid"><table style='border-collapse:collapse;width:357px;'><thead><tr style="overflow-wrap:break-word;"><td style="width:119px;background-clip: padding-box;background-color:rgba(72, 169, 197, 1.00);vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 2.00px solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;">Group</span></p></td><td style="width:95px;background-clip: padding-box;background-color:rgba(72, 169, 197, 1.00);vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 2.00px solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;">N (unweighted)</span></p></td><td style="width:143px;background-clip: padding-box;background-color:rgba(72, 169, 197, 1.00);vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 2.00px solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;">MOE</span></p></td></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td style="width:119px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Total</span></p></td><td style="width:95px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">1,203</span></p></td><td style="width:143px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">+/- 3.3 percentage points</span></p></td></tr><tr style="overflow-wrap:break-word;"><td style="width:119px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Party ID</span></p></td><td style="width:95px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;"></span></p></td><td style="width:143px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td style="width:119px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Democrats</span></p></td><td style="width:95px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">  342</span></p></td><td style="width:143px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">+/- 6.2 percentage points</span></p></td></tr><tr style="overflow-wrap:break-word;"><td style="width:119px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Republicans</span></p></td><td style="width:95px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">  273</span></p></td><td style="width:143px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">+/- 6.9 percentage points</span></p></td></tr><tr style="overflow-wrap:break-word;"><td style="width:119px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Independents</span></p></td><td style="width:95px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">  544</span></p></td><td style="width:143px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">+/- 4.9 percentage points</span></p></td></tr><tr style="overflow-wrap:break-word;"><td style="width:119px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Dem-leaning Indeps</span></p></td><td style="width:95px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">  199</span></p></td><td style="width:143px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">+/- 8.3 percentage points</span></p></td></tr><tr style="overflow-wrap:break-word;"><td style="width:119px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Rep-leaning Indeps</span></p></td><td style="width:95px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">  181</span></p></td><td style="width:143px;background-clip: padding-box;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">+/- 8.4 percentage points</span></p></td></tr></tbody></table></div>
 
 ---
 
-## R4DS
+## R chunk options
 
-&lt;img src=r4ds.png height='250'&gt;
+```` 
 
-- Published book
-- Online book: https://r4ds.had.co.nz/
-- Markdown source: https://github.com/hadley/r4ds
+````
 
-- Online community: https://www.rfordatasci.com/ (@r4dscommunity)
-
-Try going 1 chapter/week
+Review the chunk options in [RStudio cheatsheet]
+(https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf)
 
 ---
 
-## Stackoverflow
+## Parametric markdown documents
 
-https://stackoverflow.com/questions/tagged/r
+The more advanced forms of markdown documents use inputs/parameters.
+
+- Output format: HTML (the most flexible, and the only interactive), Word, PDF (requires LaTeX)
+- Task to perform: analysis vs. reporting the results
+- Input data files
+- Formatting specifications (e.g. digits to report)
+
+Parametric markdowns are to be used from command line / R scripts:
+
+```
+rmarkdown::render( ..., params=list(todo='analysis',input_data='KFF-April2019.sav'))
+```
 
 ---
 
-## Twitter
+## Parametric markdown: output
 
-This is where I learned the most: follow `#rstats` tag (or @rstatstweet that RTs stuff)
-
-https://twitter.com/hashtag/rstats?f=tweets&amp;vertical=default&amp;src=hash&amp;lang=en
-
+```
+filename_stub &lt;- 'MyReport'
+rmarkdown::render(input=paste0(filename_stub,.'Rmd'),   # input file
+  output_file=I(paste0(filename_stub,'-',Sys.Date())),  # output file with date embedded, no extension
+  output_format='docx_document')                        # output format and extension
+  # output_format='html_document')                        # output format and extension
+)  
+```
 
 ---
 
-## Code version control in R
+## Parametric markdown: YAML header
 
-https://happygitwithr.com/ by @JennyBryan
+```
+title: "Reproducible report generation using Markdown"
+author: "Stas Kolenikov"
+date: Sys.Date()
+output:
+  html_output:
+    code_folding: hide
+    toc: TRUE
+  word_document:
+    reference_docx: Abt_2018_Report_Template.docx
+```
 
-- a reasonably complete introduction to using Git with RStudio
+---
+
+## Parametric markdown: YAML header
+
+```
+title: "Reproducible report generation using Markdown"
+author: "Stas Kolenikov"
+date: Sys.Date()
+params:
+  todo: analysis
+  # todo: reporting
+  data_source: April2019.dta
+  # data_source: Mar2019.dta
+  digits: 4
+```
+
+---
+
+## Parametric markdown: tasks to do
+
+````
+```r long_analysis
+if (params$todo=="analysis") {
+  # mixed modeling code that takes hours to execute
+  model1 &lt;- ...
+  saveRDS(model1, file='model1.Rds')
+} else if (params$todo=="reporting") {
+  model1 &lt;- readRDS(file='model1.Rds')
+}
+```
+````
+
+---
+
+## Parametric markdown: varying data sources
+
+Explicit naming:
+
+````
+
+---
+params:
+  data_source: KFF-April2019.sav
+---
+```r read_data
+main_data &lt;- read.sav( params$data_source )
+```
+
+````
+
+---
+
+## Parametric markdown: varying data sources
+
+Combining parts:
+
+````
+
+---
+params:
+  month: April
+---
+
+```r read_data_by_month
+main_data &lt;- read.sav( paste0( 'KFF-',params$month, '2019.sav' ) )
+```
+
+````
+
+Which can be rendered with
+
+```
+filename_stub &lt;- 'MyReport'
+month         &lt;- 'April'
+rmarkdown::render(input=paste0(filename_stub,.'Rmd'),   # input file
+  output_file=I(paste0(filename_stub,'-',month,'-',Sys.Date())),  # custom name
+  output_format='docx_document'),                       # output format and extension
+  params=list(month=month)                              # passing parameters
+)
+```
+
+---
+
+## Reasons for markdown
+
+1. Combine narrative and data analysis
+2. Reproduce your work (reports, revisions)
+3. Reuse the code with different options, sources, formatting, ...
+4. Version control over the plain text
+
+---
+
+## Reasons for markdown: version control
+
+![](docs/rainman.jpg)
+
+---
+
+## Version control
+
+This talk:
+
+- https://github.com/skolenik/markdown2020
+
+VCS training, of sorts (~1.5 hrs)
+
+- https://github.com/skolenik/shower-vcs
+
+A complete introduction to using Git with RStudio
+
+- https://happygitwithr.com/ by @JennyBryan
 
 ---
 
@@ -348,7 +548,6 @@ https://happygitwithr.com/ by @JennyBryan
 
 Gradual, incremental changes
 
-- a chapter of R4DS/week
 - convert a section / 3-5 tables/plots to R per monthly report
     * ask "how do I" questions on Twitter, and/or
     * ask "how do I" questions on RStudio community
@@ -367,6 +566,24 @@ Early on:
 Intermediate to advanced:
 - Labeled integers vs. strings vs. factor variables
 - Package versioning and management
+
+---
+
+## Markdown in other languages
+
+Stata: markstat
+
+---
+
+## Markdown in other languages
+
+Python: markdown cells in notebooks
+
+---
+
+## Markdown in other languages
+
+Diagrams: `mermaid` in Typora
 
 ---
 
