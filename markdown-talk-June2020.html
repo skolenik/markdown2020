@@ -19,7 +19,7 @@ class: center, middle, inverse, title-slide
 
 # Reproducible report generation using Markdown
 ### Stas Kolenikov
-### June 8-9, 2020
+### June 8–9, 2020
 
 ---
 
@@ -28,26 +28,89 @@ class: center, middle, inverse, title-slide
 
 
 
-## Purpose
+## Purposes
 
-1. Introduce Markdown as a bare bones text-only format that allows to format text,
-   insert links, insert images.
+1. Introduce Markdown as a bare bones text-only format that allows formatting text,
+   inserting links, inserting images.
 2. Introduce RMarkdown as a tool to weave together text and analysis (tables, figures,
    plots, individual numbers).
 3. Demonstrate other uses of Markdown (Stata, Python notebooks, diagrams).
-4. Demonstrate flexible / reproducible report generation with Markdown templates
+4. Demonstrate flexible / reproducible report generation with parametric Markdown templates
    and input parameters.
+5. Provide resources for further professional development.
 
 Helpful upfront knowledge: some R; some HTML
+
+???
+
+Active teaching goal: you would be able to produce basic Markdown documents;
+passive goal: you would be able to understand Markdown syntax.
+
+Need R because the best available vehicle is RStudio / RMarkdown. 
+Markdown also works in Stata, and is integral to Python Jupyter notebooks.
+
+Need HTML because the primary, and the most flexible and cute looking, output from
+Markdown is into HTML.
+
+---
+
+## Focus on reproducibility
+
+- Produce reports for several waves of data.
+- Produce reports for the data that is being collected / cleaned.
+- Produce updated analyses / updated text for academic papers.
+
+Modern take: [literate programming](https://en.wikipedia.org/wiki/Literate_programming) 
+tools based on plain text
+- Markdown to code and to write up.
+- GitHub to store versions of the code and the writeup, plus optionally the data.
+
+Adopt sensible file storage structures, code documentation practices.
+
+Avoid point and click; avoid copy and paste.
+
+???
+
+Reproducibility needs are all around us, whether we are in industry or in academia.
+In my 20+ years of doing statistics, it has never been the case that the first analysis
+I ran was the one ultimately reported / published / presented. Expect the work to be
+repeated and redone, which means the code and the narrative need to be stored and recycled.
+In my world of contract research, this typically involves updates to the data
+with new methodology reports. In the academic world, this more often involves
+a different analysis, e.g. in response to the adviser or the referee comments.
+
+Literate programming is a concept that actually dates back to 1970s when 
+Donald Knuth first wrote TeX as an example of a literate programming language.
+In literate programming, a computer program is given an explanation of its logic 
+in a natural language, such as English, interspersed with snippets of macros 
+and traditional source code, from which executable code can be generated.
+
+---
+
+## Literate programming
+
+&gt; Let us change our traditional attitude to the construction of programs: 
+&gt; Instead of imagining that our main task is to instruct a computer what to do, 
+&gt; let us concentrate rather on explaining to humans what we want the computer to do.
+&gt; 
+&gt; — Donald E. Knuth, Literate Programming, 1984
+
+---
+
+## Abt reproducibility guidelines
+
+As a part of the Abt Standardizations, we have a set of
+[Abt Reproducibility Guidelines](https://abtassoc.sharepoint.com/sites/PropProj/KnowledgeHub/ProjectResources/Forms/Document%20Set/docsethomepage.aspx?ID=221&amp;FolderCTID=0x0120D520004D4796F2693915459571CEAF63A49541&amp;List=d31a478e-121d-4d59-a9d0-e8ecf37affbc&amp;RootFolder=%2Fsites%2FPropProj%2FKnowledgeHub%2FProjectResources%2FCoding%20Standardization%20%2D%20Documentation%20and%20Reproducibility%20Resources&amp;RecSrc=%2Fsites%2FPropProj%2FKnowledgeHub%2FProjectResources%2FCoding%20Standardization%20%2D%20Documentation%20and%20Reproducibility%20Resources)
+
 
 ---
 
 ## Why I am here
 
-1996: learned LaTeX by forcing myself to do Econ homeworks, and HTML to produce
-my very first pages/websites.
+1996: learned LaTeX by forcing myself to do Econ homeworks in LaTeX; 
+&lt;br&gt;learned HTML to produce my very first pages/websites.
 
-Academia 2005--2008-ish: statistical simulations in Stata
+Academia 2005&amp;ndash;2008-ish: statistical simulations in Stata
 summarizing results with the likes of
 
 ```
@@ -59,15 +122,21 @@ for j=1/5 {
 }
 ```
 
-2015-ish: was preparing for a course on webscraping in R, brushed up R skills,
+2015-ish: was preparing to take a course on webscraping in R, brushed up R skills,
 stumbled upon [R4DS](https://r4ds.had.co.nz/). Wrote my next weighting report in
-Markdown, and now do 98% of my R coding work in markdown.
+Markdown, was blown away, and now do 98% of my R coding work in markdown.
+
+???
+
+As you can clearly see in this Stata code,
+it summarizes the simulated means, standard deviations, and confidence intervals coverage,
+and outputs them into a LaTeX table.
 
 ---
 
 ## My take on software
 
-- One rectangular data set, analysis leading up to a handful of regresion tables: Stata
+- One rectangular data set, analysis leading up to a handful of regression tables: Stata
 - Develop and deploy algorithms on web: Python, Java
 - Produce reports: R
 
@@ -191,7 +260,7 @@ Hi, I am **Stas** _Kolenikov_. I use Markdown to:
     + take notes
     + make to-do lists
 
-<div class="countdown" id="timer_5ecd8ade" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_5ed55b19" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -209,6 +278,8 @@ Hi, I am **FirstName** _LastName_. I am using Markdown to:
     + make to-do lists
 ```
 
+Feel free to carry on and do more of the basic markdown tutorials at https://www.markdowntutorial.com/.
+
 ---
 
 class: inverse
@@ -224,15 +295,29 @@ Additionally, R and some other languages can
 - incorporate source code 
 - incorporate the output, such as numbers, tables, and plots
 
-... into Markdown documents
+... into Markdown documents. 
+(You are explaining to other humans, including your future self,
+what you want to do with the data!)
+
+Code chunks:
 
 ```` 
+```r
 
+# some code here
+
+``` 
 ````
+
+Inline code:
+
+The total number of observatsions is 
+&lt;code&gt;&amp;#96;&lt;/code&gt;`r nrow(mydata)`
+&lt;code&gt;&amp;#96;&lt;/code&gt;.
 
 ---
 
-## Tidy pipes 
+## Aside: tidy pipes 
 
 ![](docs/magritr.png)
 
@@ -261,13 +346,13 @@ https://www.rstudio.com/resources/cheatsheets/
 
 ## Graphics
 
-![](markdown-talk-June2020_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](markdown-talk-June2020_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
 
 ```
 library(ggplot2)
 ```
 
-and a myriad of extentions to it.
+and a myriad of extentions to it. Graphic output of a chunk is inserted.
 
 ---
 
@@ -282,16 +367,6 @@ and a myriad of extentions to it.
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; 1,203 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; +/- 3.3 percentage points &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Party ID &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-  &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Democrats &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; 342 &lt;/td&gt;
@@ -320,11 +395,13 @@ and a myriad of extentions to it.
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-A lot of output looks like a table already: regression results, cross-tabs
+A lot of output looks like a table already: regression results, cross-tabs.
+Other research results may be assembled as small data sets of summary statistics.
 
 ```
 # aimed at HTML
 library(kableExtra)
+library(gt)
 # aimed more at MS products
 library(flextable)
 ```
@@ -476,31 +553,36 @@ rmarkdown::render( ...,
 
 ```
 filename_stub &lt;- 'MyReport'
-rmarkdown::render(input=paste0(filename_stub,.'Rmd'), 
+rmarkdown::render(
+  input=paste0(filename_stub,.'Rmd'), 
          # input file
   output_file=I(paste0(filename_stub,'-',Sys.Date())),  
          # output file with date embedded, no extension
   output_format='docx_document')                        
-         # output format and extension
+         # output format; the extension is inferred from it
   # output_format='html_document')                      
-         # alternative output format
+         # alternative output format; here, commented out
 )  
 ```
+
+PDF output requires a LaTeX compiler; not presented in this talk.
 
 ---
 
 ## Parametric markdown: YAML header
 
 ```
+---
 title: "Reproducible report generation using Markdown"
 author: "Stas Kolenikov"
-date: 2020-05-26
+date: 2020-06-01
 output:
   html_output:
     code_folding: hide
     toc: TRUE
   word_document:
     reference_docx: Abt_2018_Report_Template.docx
+---
 ```
 
 ---
@@ -508,15 +590,17 @@ output:
 ## Parametric markdown: YAML header
 
 ```
+---
 title: "Reproducible report generation using Markdown"
 author: "Stas Kolenikov"
-date: 2020-05-26
+date: 2020-06-01
 params:
   todo: analysis
   # todo: reporting
   data_source: April2019.dta
   # data_source: Mar2019.dta
   digits: 4
+---
 ```
 
 ---
@@ -537,7 +621,7 @@ if (params$todo=="analysis") {
 
 ---
 
-## Parametric markdown: varying data sources
+## Parametric markdown: varying data
 
 Explicit naming:
 
@@ -556,13 +640,13 @@ main_data &lt;- read.sav( params$data_source )
 
 ---
 
-## Parametric markdown: varying data sources
+## Parametric markdown: varying data
 
 Combining parts:
 
 ````
-
 ---
+...
 params:
   month: April
 ---
@@ -570,7 +654,6 @@ params:
 ```r read_data_by_month
 main_data &lt;- read.sav( paste0( 'KFF-',params$month, '2019.sav' ) )
 ```
-
 ````
 
 Which can be rendered with
@@ -787,6 +870,28 @@ scatter mpg price
 ```
 
 ````
+
+---
+
+## Software citations
+
+R version: R version 3.6.3 (2020-02-29).
+
+Packages versions:
+
+
+```
+-  library( here ):  version 0.1 
+-  library( knitr ):  version 1.28 
+-  library( kableExtra ):  version 1.1.0 
+-  library( flextable ):  version 0.5.9 
+-  library( tidyverse ):  version 1.3.0 
+-  library( xaringanthemer ):  version 0.3.0 
+-  library( shiny ):  version 1.4.0 
+-  library( countdown ):  version 0.3.3
+```
+
+
 
 ---
 
