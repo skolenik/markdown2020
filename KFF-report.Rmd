@@ -11,30 +11,24 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r libraries, message=FALSE, warning=FALSE}
 # to read SPSS files
-library(foreign)
 library(haven)
 # to produce graphics
 library(ggplot2)
-library(RColorBrewer)
 # to process data
 library(tidyverse)
 # to produce neat tables
 library(knitr)
 library(kableExtra)
 library(flextable)
-# to produce a codebook
-library(vtable)
 # to work with survey data
 library(survey)
 # to abstract directories
 library(here)
-# to process strings
-library(stringr)
 ```
 
 ```{r deff_function}
@@ -51,14 +45,10 @@ stopifnot( neff(c(5,0,0)) == 1)
 ```
 
 ```{r read_spss}
-KFF_data <- haven::read_spss(here("data","Kaiser Health Tracker Poll_April_Final no rotates.sav"))
+KFF_data <- haven::read_spss(here("data","Kaiser Health Tracker Poll_April2019_Final.sav"))
 ```
 
-```{r vtable, warning=FALSE}
-if (interactive()) vtable(KFF_data)
-```
-
-## Generic sample report
+## Sample report
 
 ```{r svydates}
 # need to preprocess the survey dates from the intvwdate variable
