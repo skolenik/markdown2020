@@ -77,13 +77,15 @@ Markdown is into HTML.
 
 ## Focus on reproducibility
 
+Do, redo, and do over again:
+
 - Produce reports for several waves of data.
 - Produce reports for the data that is being collected / cleaned.
-- Produce updated analyses / updated text for academic papers.
+- Produce updated analyses / updated text for academic papers revisions.
 
 Modern take: [literate programming](https://en.wikipedia.org/wiki/Literate_programming) 
 tools based on plain text
-- Markdown to code and to write up.
+- Markdown to code and to write up,
 - GitHub to store versions of the code and the writeup, plus optionally the data.
 
 Adopt sensible file storage structures, code documentation practices.
@@ -126,7 +128,7 @@ As a part of the Abt Standardizations, we have a set of
 
 ---
 
-## Why I am here
+## Personal journey
 
 1996: learned LaTeX by forcing myself to do Econ homeworks in LaTeX; 
 <br>learned HTML to produce my very first pages/websites.
@@ -155,11 +157,15 @@ and outputs them into a LaTeX table.
 
 ---
 
-## My take on software
+class: inverse, center
 
-- One rectangular data set, analysis leading up to a handful of regression tables: Stata
-- Develop and deploy algorithms on web: Python, Java
-- Produce reports: R
+# Basics of Markdown
+
+---
+
+## Markdown
+
+![](docs/markdown-everywhere.jpg)
 
 ---
 
@@ -167,13 +173,17 @@ and outputs them into a LaTeX table.
 
 Do I need to say anything about the educated fleas??
 
+Flexible parametric documents in markdown:
+
 https://medium.com/@urban_institute/r-is-the-best-programming-language-for-innovation-at-urban-155e2ebf5c74
 
 https://medium.com/@urban_institute/iterated-fact-sheets-with-r-markdown-d685eb4eafce
 
-https://medium.com/pew-research-center-decoded/using-tidyverse-tools-with-pew-research-center-survey-data-in-r-bdfe61de0909
+Dashboards in markdown:
 
+http://nvlmi.mt.gov/Portals/197/UI%20Monthly%20Claims%20Press%20Release/Dashboards/UIWeeklyDashboard.html#about
 
+https://rsdev.shinyapps.io/SBD_app/
 
 ---
 
@@ -193,18 +203,6 @@ Nicely packaged within RStudio
 ## Copy-paste vs. markdown
 
 ![](docs/copy-paste.jfif)
-
----
-
-class: inverse, center
-
-# Basics of Markdown
-
----
-
-## Markdown
-
-![](docs/markdown-everywhere.jpg)
 
 ---
 
@@ -311,12 +309,12 @@ class: inverse
 
 ## R Markdown
 
-Additionally, R and some other languages can 
+Additionally, combination of Markdown with R and some other languages allows to
 
 - incorporate source code 
 - incorporate the output, such as numbers, tables, and plots
 
-... into Markdown documents. 
+... into data-driven documents. 
 (You are explaining to other humans, including your future self,
 what you want to do with the data!)
 
@@ -338,6 +336,25 @@ The total number of observatsions is
 
 ---
 
+## From source to the report
+
+Your source markdown file contains 
+
+- your text describing the data, the analysis, and possibly the findings;
+- the code to deal with the data.
+
+How do you get the numbers into the document? How do you know the code actually runs?
+
+Compilation stage: instruct your software to...
+
+- run the underlying code;
+- insert the numbers into output;
+- present this in a human-readable form (HTML, Word, PDF, PPT, ...)
+
+<img src="data:image/png;base64,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" width="20" height="18" class="GD15MCFCPU"> Knit button in RStudio
+
+---
+
 ## Aside: tidy pipes 
 
 ![](docs/magritr.png)
@@ -353,9 +370,17 @@ in data prep, analysis, and creation of graphs (`library(ggplot2)` although it u
 
 ## KFF tracking poll
 
+Case study:
+Kaiser Family Foundation Kaiser Health Tracking Poll 
+
 [Simplified KFF report: source](KFF-report.Rmd)
 
 [Simplified KFF report: rendered](KFF-report.html)
+
+
+March 2019: https://ropercenter.cornell.edu/ipoll/study/31116193, doi:10.25940/ROPER-31116193
+
+April 2019: https://ropercenter.cornell.edu/ipoll/study/31116357, doi:10.25940/ROPER-31116357
 
 ---
 
@@ -643,6 +668,12 @@ rmarkdown::render(input=paste0(filename_stub,.'Rmd'),   # input file
 
 ---
 
+## Hands-on: edit the KFF report
+
+Go back to the KFF report markdown file and make it parametric (take month and year as input)
+
+---
+
 class: inverse
 
 # Markdown presentations
@@ -793,6 +824,32 @@ Diagrams: `mermaid` in Typora
 
 ---
 
+## Sequence diagrams
+
+![](http://support.typora.io/media/diagrams/js-sequence.png)
+
+---
+
+## Sequence diagrams
+
+````
+```sequence
+Alice->Bob: Hello Bob, how are you?
+Note right of Bob: Bob thinks
+Bob-->Alice: I am good thanks!
+```
+````
+
+Try more at https://mermaid-js.github.io/mermaid-live-editor/
+
+---
+
+## Sequence diagrams
+
+![](mrp.png)
+
+---
+
 ## Other languages in RStudio
 
 Python:
@@ -829,20 +886,29 @@ statapath <- "C:/Program Files/Stata16/Stata-MP.exe"
 library(Statamarkdown)
 knitr::opts_chunks$set(engine.path=list(stata=statapath))
 ```
+````
 
 Do something in Stata (`collectcode` option makes sure results are cumulative):
 
+````
 ```stata, collectcode=TRUE
 sysuse auto, clear
 ```
+````
 
 More Stata:
 
+````
 ```stata
 scatter mpg price
 ```
-
 ````
+
+---
+
+class: inverse
+
+# In the spirit of reproducible reporting
 
 ---
 
@@ -852,13 +918,14 @@ R version: `r R.version.string`.
 
 Packages versions:
 
-```{r package_versions, comment='- '}
+```{r package_versions}
+pvers <- ''
 for( p in need_packages ) {
-  cat('library(',p, '):  version', as.character(packageVersion(p)), '\n')
+  pvers <- paste0(pvers, '- library(',p, '):  version ', as.character(packageVersion(p)), '\n')
 }
 ```
 
-
+`r pvers`
 
 ---
 
