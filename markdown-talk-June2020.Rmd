@@ -178,6 +178,7 @@ Flexible parametric documents in markdown:
 https://medium.com/@urban_institute/r-is-the-best-programming-language-for-innovation-at-urban-155e2ebf5c74
 
 https://medium.com/@urban_institute/iterated-fact-sheets-with-r-markdown-d685eb4eafce
+(GitHub: https://github.com/UI-Research/rmarkdown-fact-pages)
 
 Dashboards in markdown:
 
