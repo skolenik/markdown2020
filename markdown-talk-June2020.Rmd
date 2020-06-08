@@ -378,6 +378,9 @@ Kaiser Family Foundation Kaiser Health Tracking Poll
 
 [Simplified KFF report: rendered](KFF-report.html)
 
+[Text, tables and graphs version of KFF: rendered](KFF-report-full-April2019.html)
+
+#### Data sources:
 
 March 2019: https://ropercenter.cornell.edu/ipoll/study/31116193, doi:10.25940/ROPER-31116193
 
@@ -811,11 +814,17 @@ class: inverse
 
 Stata: markstat
 
+https://data.princeton.edu/stata/markdown
+
+(See Stas' [ICHPS 2020 Complex Surveys](https://github.com/skolenik/ICHPS2020-svy/blob/master/ichps2020-svy.stmd))
+
 ---
 
 ## Markdown in other languages
 
 Python: markdown cells in notebooks
+
+#### Hands-on part for Stas: launch a notebook to show
 
 ---
 
