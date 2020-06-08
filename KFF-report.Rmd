@@ -2,9 +2,6 @@
 title: "KFF report"
 author: "Stas Kolenikov"
 date: "`r Sys.Date()`"
-params:
-  month: April
-  year:  2019
 output:
   html_document:
     df_print: paged
@@ -44,8 +41,7 @@ stopifnot( neff(c(5,0,0)) == 1)
 ```
 
 ```{r read_spss}
-KFF_data <- haven::read_spss(here("data",paste0("Kaiser Health Tracker Poll_",
-                                                params$month,params$year,"_Final.sav")))
+KFF_data <- haven::read_spss(here("data","Kaiser Health Tracker Poll_April2019_Final.sav"))
 ```
 
 ## Sample report
