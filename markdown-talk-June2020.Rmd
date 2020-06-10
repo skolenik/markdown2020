@@ -268,7 +268,7 @@ Text in **bold**
 
 ## Exercise
 
-1. Go to [SlackEdit](https://stackedit.io/app#) online editor.
+1. Go to [SlackEdit.io](https://stackedit.io/app#) online editor.
 2. Open/create a new file (click `r icon('folder', lib='font-awesome')` to open the file menu).
 3. Enter the following in the editor with formatting, watch the rendered version in the right pane:
 
