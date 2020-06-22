@@ -18,8 +18,8 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-need_packages <- c("here", "knitr", "kableExtra", "flextable", "tidyverse", "xaringanthemer", 
-                   "shiny", "countdown")
+need_packages <- c("here", "knitr", "kableExtra", "flextable", "tidyverse",
+                   "xaringanthemer", "shiny", "countdown")
 for( p in need_packages ) {
   library(p, character.only=TRUE)
 }
@@ -118,86 +118,13 @@ and traditional source code, from which executable code can be generated.
 > 
 > — Donald E. Knuth, Literate Programming, 1984
 
----
-
-## Abt reproducibility guidelines
-
-As a part of the Abt Standardizations, we have a set of
-[Abt Reproducibility Guidelines](https://abtassoc.sharepoint.com/sites/PropProj/KnowledgeHub/ProjectResources/Forms/Document%20Set/docsethomepage.aspx?ID=221&FolderCTID=0x0120D520004D4796F2693915459571CEAF63A49541&List=d31a478e-121d-4d59-a9d0-e8ecf37affbc&RootFolder=%2Fsites%2FPropProj%2FKnowledgeHub%2FProjectResources%2FCoding%20Standardization%20%2D%20Documentation%20and%20Reproducibility%20Resources&RecSrc=%2Fsites%2FPropProj%2FKnowledgeHub%2FProjectResources%2FCoding%20Standardization%20%2D%20Documentation%20and%20Reproducibility%20Resources)
-
-
----
-
-## Personal journey
-
-1996: learned LaTeX by forcing myself to do Econ homeworks in LaTeX; 
-<br>learned HTML to produce my very first pages/websites.
-
-Academia 2005&ndash;2008-ish: statistical simulations in Stata
-summarizing results with the likes of
-
-```
-for j=1/5 {
-  sum beta`k'
-  file write " & " (r(mean)) " & " (r(sd) )
-  count if abs( (beta`k' - true_beta`k')/se_beta`k' ) < invnorm(0.975)
-  file write " & " (r(N)/_N*100) "\% \\" _n
-}
-```
-
-2015-ish: was preparing to take a course on webscraping in R, brushed up R skills,
-stumbled upon [R4DS](https://r4ds.had.co.nz/). Wrote my next weighting report in
-Markdown, was blown away, and now do 98% of my R coding work in markdown.
-
 ???
 
-As you can clearly see in this Stata code,
-it summarizes the simulated means, standard deviations, and confidence intervals coverage,
-and outputs them into a LaTeX table.
-
----
-
-class: inverse, center
-
-# Basics of Markdown
-
----
-
-## Markdown
-
-![](docs/markdown-everywhere.jpg)
-
----
-
-## Birds do it, bees do it
-
-Do I need to say anything about the educated fleas??
-
-Flexible parametric documents in markdown:
-
-https://medium.com/@urban_institute/r-is-the-best-programming-language-for-innovation-at-urban-155e2ebf5c74
-
-https://medium.com/@urban_institute/iterated-fact-sheets-with-r-markdown-d685eb4eafce
-(GitHub: https://github.com/UI-Research/rmarkdown-fact-pages)
-
-Dashboards in markdown:
-
-http://nvlmi.mt.gov/Portals/197/UI%20Monthly%20Claims%20Press%20Release/Dashboards/UIWeeklyDashboard.html#about
-
-https://rsdev.shinyapps.io/SBD_app/
-
----
-
-## Building blocks of my workflow
-
-- RMarkdown
-- R tidyverse (pipes!)
-- Version control
-- Cheat sheets
-
-Nicely packaged within RStudio
-
-- Google and Twitter
+Here's the defining quote by Donald Knuth, who was basically one of the founders
+of theoretical computer science. His multivolume book "The Art of Computer Programming"
+is a fundamental reading. He also authored TeX program for mathematical typesetting
+in 1970s which is the defacto publishing standard these days. TeX was an early example
+of the literate programming ideas.
 
 ---
 
@@ -205,13 +132,24 @@ Nicely packaged within RStudio
 
 ![](docs/copy-paste.jfif)
 
+???
+
+So... avoid copy-paste if you can. I try to, as hard as I can.
+
 ---
 
 ## Examples
 
 Books in markdown: http://bookdown.org, https://r4ds.had.co.nz/
 
-Dashboards in R markdown: [CRAN download gauge](https://gallery.shinyapps.io/cran-gauge/)
+Flexible parametric documents in markdown:
+
+https://medium.com/@urban_institute/iterated-fact-sheets-with-r-markdown-d685eb4eafce
+(GitHub: https://github.com/UI-Research/rmarkdown-fact-pages)
+
+Dashboards in markdown:
+
+https://rmarkdown.rstudio.com/flexdashboard/examples.html
 
 Diagrams: [Typora diagrams](http://support.typora.io/Draw-Diagrams-With-Markdown/)
 
@@ -219,6 +157,47 @@ Markdowns with several languages: [ICHPS 2020 Complex Surveys](
 https://htmlpreview.github.io/?https://github.com/skolenik/ICHPS2020-svy/blob/master/ichps2020-svy.html)
 
 Browser presentations: this webinar (show [the source](markdown-talk-June2020.Rmd)!)
+
+??? 
+
+The ideas and methods of markdown are used in many modern data science-y products.
+While I advertised this webinar as the art of reproducible report generation,
+I can also state that books are written in markdown; dashboards are created in markdown;
+and this very presentation was prepared in markdown.
+
+---
+
+## KFF tracking poll
+
+Case study:
+Kaiser Family Foundation Kaiser Health Tracking Poll 
+
+[Simplified KFF report: source](KFF-report.Rmd)
+
+[Simplified KFF report: rendered](KFF-report.html)
+
+[Text, tables and graphs version of KFF: rendered](KFF-report-full-April2019.html)
+
+#### Data sources:
+
+March 2019: https://ropercenter.cornell.edu/ipoll/study/31116193,
+doi:10.25940/ROPER-31116193
+
+April 2019: https://ropercenter.cornell.edu/ipoll/study/31116357,
+doi:10.25940/ROPER-31116357
+
+???
+
+The running example that I hope would be close to the hearts
+of AAPORites is a mini-methods report for the KFF tracking poll.
+I reproduced the margins of error table and a couple of plots
+from the actual report. These are used by permission from KFF.
+
+---
+
+class: inverse, center
+
+# Basics of Markdown
 
 ---
 
@@ -238,6 +217,10 @@ The name is supposed to be a play on "markup" which is a technical term to descr
 languages like HTML, XML, or LaTeX.
 
 https://daringfireball.net/projects/markdown/syntax
+
+???
+
+Most of the functionality of _basic_ markdown is here on this slide.
 
 ---
 
@@ -264,6 +247,10 @@ Text in **bold**
 
 ```
 
+???
+
+And here is how you "code" those elements in markdown.
+
 ---
 
 ## Exercise
@@ -272,7 +259,7 @@ Text in **bold**
 2. Open/create a new file (click `r icon('folder', lib='font-awesome')` to open the file menu).
 3. Enter the following in the editor with formatting, watch the rendered version in the right pane:
 
-# Header 1: This is my first markdown file.
+# This is my first markdown file.
 
 Hi, I am **Stas** _Kolenikov_. I use Markdown to:
 
@@ -283,6 +270,14 @@ Hi, I am **Stas** _Kolenikov_. I use Markdown to:
 ```{r exercise1_timer}
 countdown(minutes=5)
 ```
+
+???
+
+OK now I want everybody to take a few minutes and try this at home
+on your own computer. Please go to SlackEdit.io (SlackEdit is a very decent
+online markdown editor and viewer), and type up a markdown file 
+that would have a Header 1 title, your name is bold, your last name 
+in italics, and a short list of bulleted items.
 
 ---
 
@@ -335,6 +330,17 @@ The total number of observatsions is
 <code>&#96;</code>`r paste0(rawToChar(as.raw(96)),"r nrow(mydata)", rawToChar(as.raw(96)))`
 <code>&#96;</code>.
 
+???
+
+Well the greater power of markdown comes from the interfaces of markdown
+with programming languages. For the most part, I will talk about
+interfaces with R, because they are the most extensively developed ones,
+but I will also mention other environments, including Stata and Python.
+
+Code chunks: three backticks, output incorporated into the document.
+
+Inline code: usually a single number.
+
 ---
 
 ## From source to the report
@@ -354,43 +360,32 @@ Compilation stage: instruct your software to...
 
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAkCAYAAAD7PHgWAAAHMklEQVR42u2Ye1CTVxrGq93OdnXrjHbBS1sQpSIJiIRAFEIMIEZuRS5V7oJa3IJcXCh3GqTcCdckQEBACSGEAOEqoCxUQLllVXTtWnWh6lYR9q7FrYjPnjjF3XY6U6Wsy+54Zp4533zn++M37/u85/3OeeWVl+P/ZACIn5iYuK1UKuMXJKAK7uHDhxgaGgKXyy1YUHDj4+Pqw8PDmB0lJSUwNjbmLRg4ErWCS5cuPQV88OAB1qxZA7L82oKCq62tBZ1Oh5qa2ldkmbfg4EhaC9TV1VcuuLS+MLjavmtU2ZmrLEnvxeULAk7c/tnqso7RhorB8b8EVV2D//HL8CsdgbdIiXDpyKNExciVvBMXgv4rcEdbrkq94wZmmLvbYGzXgO2+HXCP7sPepH54pg3AP28YbkndcEw4iZCi3rvHmy84vRC4ioqRpYLWG9c/qv0S0bXjiJHfRU7rJMKKPodn/ADs/DsJcC30LSqxeXslDGzEsPSUI6vw5OP/OByXi8WhCf23aDYKcA72IE12F8L2exC23kOcdAIfy+4gRnoLaXVjiC67jJ1B7TB9rxqpee14IWktbrqusA/sgYlDM4x2NjyRW/AA0ivuEMj7SJBNIqv5LuIlo7A51AkKuxKZhZ3fgmO6+M9w/EJp8w7XODyqE1f35eNI+SSy275CePFtBKZ/BruDvVBFdOe+LnhGDcExuAf6VlUw4Ejwieg0+vr6nsKZOB4A7UMhvPLblfMOmFZ0vssprB/pJK2lXdMQn56GsGMG1f0zCMu7BkNrOfQsJKCwxNjIOgYT+wrU19eD/AQgNzcXm0x9sM40HW+b8MCMkDwOzWlfPa+AITkXpsycW2G0QwE73y6EZ43CJ24EZk7NJIL1cAzsQ2DWNbjHDmEzpwpuv5RALpfD398fFp5HYBGigMHeY9gSUAbqARE8kptE8wbXpPy9RrD4C8QUXIW15ykC2QBDAmqwvQZ0WwU+TL2BwvZHSFNMgdf4V8SKb8AlsgdsFx60TfOgyymDkYcYDD8x6PtLoeMlhE1UzdV5AyypuuBlREAYDq3Ea90Iyvocgqa/I6lsAj6Rv8EWewWJmoxsMV3Yl3Qe4aXX8avyKzggOAfX5E9h6islkAV4m56NVZsy8QtqMqi2hX+aM5A+s2A5dVuehS4z34fC5Pt7BirKVQAOwb2IOvoFijunUNr5NYpPPURhy9fIb5hCQPYYXA/3gGYvgzazDLRdEjC9SdXur4GRTyW2+lfCNKASG9xEeMc2B1RP0b3n3eUWU8z5XhTz/F4yzxDhu6KyhDCwJGmyrYMNqVqf+POIFY2BV/dnRJSPI7TkJiLLR+GRooTd4Q5s8ZBCZ3sJNBkCrKHlYNXmLKygJmHZhlhs3F30x2dGMzISLSFgnd+A3KCw8sOoLL7lRhZfX9dcQNvmWuZnE9yKLbuOw/6DBgRlXIT7R2fA9mwj20k19Cwl2Pp+A2wCT2FXRDccortIm+vB7tRuOKWehO0nzWBHyaHvVwINhyyoWSdDf2/x5WcG1GXxQ2ajpMcSvvN936S3j90/LL6CxOrriJWSTlF1E6l1f0CC5CaC+b+FW/xZ7AwgfdlVDipHjLVmxdBgEN/R8rDaMBPqeslYvjEeP18fgZ+tDYHxnmPPfu6gmAsc/5VKgdX3fZNRel7hEvEp9nzcB5/kQfilDME94Sw+SB+Ga0I//NIH4ZVyFo5HumAVcQKcqBbQfSV416YAmmbZeJN65Elql2iFYZlh3Ew1V/l83YSk1IPAXVH5T9ec30Fh5u9TpX52XVgztMo55Ncz5h4tYLjUg25fA5qtFHrkh4BqLQGVzDrscqw3E2HdVgE0THKhaZqDdew8rLXIxltWPKyy42GFQwbooVW9E90T2nM5nS6iMAUMXSY/loAqiW6pPDi7Wtrxu2KvgkG45/fDK7sf7plncEg0THzWA6/cXnjnEt9lnIJjYisYh6pgqfLdwVJsCiiFlm8B3rRLxUo73j/4NSNa+BtW/Nij9CJSOEMEMnP2zWTj5Btxwv5zVkEnYBnSBufYk3CKacOO0EaYBdbCIrQOtvHN2BFTD5NACUwOVkLbuRBqzAy8QYkhipqh7j1mRlrzYqJX54ymzchfRmHxRQTuvg6Lr/UUeQyvj3SML40tGjxnekABunstGHtIFduWQ49zFBssC59Ii3hZa5sAmuxcrNyaghWmCVjJSZmmhVU4PzcM2YjfJ1W8n6QylDxzifdkBOwe1Zw/RSDf+871xKvf6LW8EyNJ4ZL+BztSW2GV2ATbpEY4HFHAPEwKdqQUjJAKGASIsN47F4ahZRdN4iq05hStf9uIp0mRjFFYgiYyR1PMcjV+4C5lkVJ5e0mybDA/oOT0Hae0lmlmmAzWkdVgh1c/IrrP4coHrBNrtv0op6namkpsNvcnc7jwUXnpp0TLiN4iohAZERkQaRItfXkt9nL8r49/AlPP/eU53XtCAAAAAElFTkSuQmCC" width="20" height="18" class="GD15MCFCPU"> Knit button in RStudio
 
----
+???
 
-## Aside: tidy pipes 
-
-![](docs/magritr.png)
-
-R `library(magritr)` introduced a pipe operator `%>%` that allows stringing 
-of manipulations / adjustment of formatting options. It helps isolating steps
-in data prep, analysis, and creation of graphs (`library(ggplot2)` although it uses
-`+` for piping) and tables.
-
-[Treachery of Images](https://en.wikipedia.org/wiki/The_Treachery_of_Images)
+So I've been saying a lot how great it is that you can incorporate
+statistical output in markdown. How exactly does that happen? What you type
+is the narrative text and the code; but the code needs to be run.
+What is the magic that puts the numbers into the output? 
+We can call this step "compilation", or "rendering". In RStudio, it is 
+the "Knit" button.
 
 ---
 
-## KFF tracking poll
-
-Case study:
-Kaiser Family Foundation Kaiser Health Tracking Poll 
-
-[Simplified KFF report: source](KFF-report.Rmd)
-
-[Simplified KFF report: rendered](KFF-report.html)
-
-[Text, tables and graphs version of KFF: rendered](KFF-report-full-April2019.html)
-
-#### Data sources:
-
-March 2019: https://ropercenter.cornell.edu/ipoll/study/31116193, doi:10.25940/ROPER-31116193
-
-April 2019: https://ropercenter.cornell.edu/ipoll/study/31116357, doi:10.25940/ROPER-31116357
-
----
-
-## To learn more: cheatsheets
+## Almost everything you need to know
 
 https://www.rstudio.com/resources/cheatsheets/
+
+Markdown: https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf
+
+???
+
+RStudio provides a number of great self-learning resources,
+including a series of several dozen cheatsheets covering the different
+aspects of R, RStudio, and specific packages. One of the cheatsheets
+is on Markdown. I believe I know about 25% of this cheatsheet;
+and I think in my 3-4 years of using markdown for everything,
+there were about two occasions where I had to go beyond the cheatsheet 
+and refer to the full documentation to tweak what I needed to be done.
 
 ---
 
@@ -405,6 +400,12 @@ library(ggplot2)
 ```
 
 and a myriad of extentions to it. Graphic output of a chunk is inserted.
+
+???
+
+This is a graph from the fake KFF report that I produced.
+Basically, this is to say, whatever graphs R can produce,
+can be inserted into markdown document.
 
 ---
 
@@ -519,10 +520,13 @@ class: inverse
 
 ## R chunk options
 
-```` 
-```{r ChunkName, echo=FALSE} 
+Chunk options modify how the code runs within the chunk, 
+and how the output is being displayed.
 
-# some code here that I don't want to see in the final output
+```` 
+```r ChunkName, echo=FALSE, fig.height=4, fig.width=6
+
+# some graphics code here that I don't care to see in the final output
 
 ``` 
 ````
@@ -539,7 +543,7 @@ The more advanced forms of markdown documents use inputs/parameters.
 - Output format: HTML (the most flexible, and the only interactive), Word, PDF (requires LaTeX)
 - Task to perform: analysis vs. reporting the results
 - Input data files
-- Formatting specifications (e.g. digits to report)
+- Formatting specifications (e.g. colors to use)
 
 Parametric markdowns are to be used from command line / R scripts:
 
@@ -548,6 +552,14 @@ rmarkdown::render( ...,
     params=list(todo='analysis',
           input_data='KFF-April2019.sav'))
 ```
+
+???
+
+I said before that you render the markdown documents by hitting the 
+"Knit" button in RStudio. Of course all that this button does is 
+runs a certain R function. That function is `rmarkdown::render()`.
+If I wanted to do something custom, I would need to run this explicitly,
+either from the console or in a script.
 
 ---
 
@@ -587,13 +599,19 @@ output:
 ---
 ```
 
+???
+
+Most of YAML header is fixed syntax with reserved keywords,
+such as `title`, `author`, `date`, `output`, and suboptions for 
+the different output formats.
+
 ---
 
 ## Parametric markdown: YAML header
 
 ```
 ---
-title: "Reproducible report generation using Markdown"
+title: "Reproducible report genercation using Markdown"
 author: "Stas Kolenikov"
 date: `r Sys.Date()`
 params:
@@ -604,6 +622,14 @@ params:
   digits: 4
 ---
 ```
+???
+
+Here's how the list of flexible parameters is to be specified in the YAML header.
+You can give them the names you like and find informative of the function.
+For instance, if I have analyses that run forever, I can have a `todo` parameter
+that instructs my code what to do. If I envision running my analysis with 
+different data sources, I can specify the data source as a parameter.
+
 
 ---
 
@@ -759,10 +785,6 @@ This talk:
 
 - https://github.com/skolenik/markdown2020
 
-VCS training, of sorts (~1.5 hrs)
-
-- https://github.com/skolenik/shower-vcs
-
 A complete introduction to using Git with RStudio
 
 - https://happygitwithr.com/ by @JennyBryan
@@ -789,24 +811,15 @@ Gradual, incremental changes
 
 ---
 
-## Pain points
-
-Early on:
-- Interface
-- Command line and scripts
-- Obscure error messages
-- Multiple R syntaxes (base R, formulas, tidyverse)
-- Too many resources
-
-Intermediate to advanced:
-- Labeled integers vs. strings vs. factor variables
-- Package versioning and management
-
----
-
 class: inverse
 
 # Markdown and other languages
+
+---
+
+## Markdown
+
+![](docs/markdown-everywhere.jpg)
 
 ---
 
