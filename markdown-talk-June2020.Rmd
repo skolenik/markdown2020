@@ -1,7 +1,7 @@
 ---
 title: "Reproducible report generation using Markdown"
 author: "Stas Kolenikov"
-date: "June 8&ndash;9, 2020"
+date: "June 29, 2020"
 output: 
 # rmdshower does not work with flextable
 #  rmdshower::shower_presentation:
@@ -64,6 +64,12 @@ Helpful upfront knowledge: some R; some HTML
 
 ???
 
+I would like to thank AAPOR for giving me the opportunity to present this work.
+This presentation is basically about research tools. While my title at Abt
+is that of a statistician, there won't be any statistics, just some concepts
+of reproducibility, and tools implementing these concepts.
+
+This is a continuing education event, so let us set some minimal educational goals.
 Active teaching goal: you would be able to produce basic Markdown documents;
 passive goal: you would be able to understand Markdown syntax.
 
@@ -97,16 +103,11 @@ Avoid point and click; avoid copy and paste.
 Reproducibility needs are all around us, whether we are in industry or in academia.
 In my 20+ years of doing statistics, it has never been the case that the first analysis
 I ran was the one ultimately reported / published / presented. Expect the work to be
-repeated and redone, which means the code and the narrative need to be stored and recycled.
+repeated and redone, which means the code to analyzze the data and 
+the narrative to explain your results need to be stored and recycled.
 In my world of contract research, this typically involves updates to the data
 with new methodology reports. In the academic world, this more often involves
 a different analysis, e.g. in response to the adviser or the referee comments.
-
-Literate programming is a concept that actually dates back to 1970s when 
-Donald Knuth first wrote TeX as an example of a literate programming language.
-In literate programming, a computer program is given an explanation of its logic 
-in a natural language, such as English, interspersed with snippets of macros 
-and traditional source code, from which executable code can be generated.
 
 ---
 
@@ -120,11 +121,14 @@ and traditional source code, from which executable code can be generated.
 
 ???
 
-Here's the defining quote by Donald Knuth, who was basically one of the founders
-of theoretical computer science. His multivolume book "The Art of Computer Programming"
-is a fundamental reading. He also authored TeX program for mathematical typesetting
-in 1970s which is the defacto publishing standard these days. TeX was an early example
-of the literate programming ideas.
+The more computationally savvy researchers gravitate towards the tools of 
+literate programming, a concept that actually dates back to 1970s when 
+Donald Knuth first wrote TeX mathematical typesetting package 
+as an example of a literate programming language.
+In literate programming, a computer program is given an explanation of its logic 
+in a natural language, such as English, interspersed with snippets of macros 
+and traditional source code, from which executable code can be generated.
+His multivolume book "The Art of Computer Programming" is a fundamental reading in CS. 
 
 ---
 
@@ -134,36 +138,17 @@ of the literate programming ideas.
 
 ???
 
-So... avoid copy-paste if you can. I try to, as hard as I can.
+So if I need to copy and paste 10 tables and 5 graphs and 20 individual
+numbers for R or Stata into MS Word, I have at least 35 chances to make a mistake.
+The likelihood of a mistake, in my opinion, grows much higher when you are 
+need to update something, more than just writing from the scratch the first time.
+The biggest danger is that you simply forget to update stuff 
+in all appropriate places. 
 
----
+Bottomline: avoid copy-paste if you can. I try to, as hard as I can.
 
-## Examples
-
-Books in markdown: http://bookdown.org, https://r4ds.had.co.nz/
-
-Flexible parametric documents in markdown:
-
-https://medium.com/@urban_institute/iterated-fact-sheets-with-r-markdown-d685eb4eafce
-(GitHub: https://github.com/UI-Research/rmarkdown-fact-pages)
-
-Dashboards in markdown:
-
-https://rmarkdown.rstudio.com/flexdashboard/examples.html
-
-Diagrams: [Typora diagrams](http://support.typora.io/Draw-Diagrams-With-Markdown/)
-
-Markdowns with several languages: [ICHPS 2020 Complex Surveys](
-https://htmlpreview.github.io/?https://github.com/skolenik/ICHPS2020-svy/blob/master/ichps2020-svy.html)
-
-Browser presentations: this webinar (show [the source](markdown-talk-June2020.Rmd)!)
-
-??? 
-
-The ideas and methods of markdown are used in many modern data science-y products.
-While I advertised this webinar as the art of reproducible report generation,
-I can also state that books are written in markdown; dashboards are created in markdown;
-and this very presentation was prepared in markdown.
+Wouldn't it be great if computer had to remember all of these things,
+rather than my old tired brain??
 
 ---
 
@@ -195,6 +180,29 @@ from the actual report. These are used by permission from KFF.
 
 ---
 
+## Extended examples
+
+Books in markdown: http://bookdown.org, https://r4ds.had.co.nz/
+
+Flexible parametric documents in markdown:
+
+https://medium.com/@urban_institute/iterated-fact-sheets-with-r-markdown-d685eb4eafce
+(GitHub: https://github.com/UI-Research/rmarkdown-fact-pages)
+
+Dashboards in markdown:
+
+https://rmarkdown.rstudio.com/flexdashboard/examples.html
+
+Diagrams: [Typora diagrams](http://support.typora.io/Draw-Diagrams-With-Markdown/)
+
+Markdowns with several languages: [ICHPS 2020 Complex Surveys](
+https://htmlpreview.github.io/?https://github.com/skolenik/ICHPS2020-svy/blob/master/ichps2020-svy.html)
+
+Browser presentations: this webinar (Stas can show 
+[the source code](markdown-talk-June2020.Rmd))
+
+---
+
 class: inverse, center
 
 # Basics of Markdown
@@ -221,6 +229,12 @@ https://daringfireball.net/projects/markdown/syntax
 ???
 
 Most of the functionality of _basic_ markdown is here on this slide.
+This also comprises 98% of what you do in Word: write some text,
+declare headings, make lists. Computer scientists decided to abstract these tasks
+and make them possible with plain text; they love plain text because
+it is very easy to compare text files, and there are very powerful
+text editors (I have cycled through WinEdt, UltraEdit, Textpad, Sublime,
+Notepad++, and some others; BBEdit is a popular Mac editor. )
 
 ---
 
@@ -251,6 +265,9 @@ Text in **bold**
 
 And here is how you "code" those elements in markdown.
 
+As a matter of fact, this is gently supported in Outlook: if you enclose
+some text in underscores or stars, it becomes italic or bold.
+
 ---
 
 ## Exercise
@@ -259,7 +276,7 @@ And here is how you "code" those elements in markdown.
 2. Open/create a new file (click `r icon('folder', lib='font-awesome')` to open the file menu).
 3. Enter the following in the editor with formatting, watch the rendered version in the right pane:
 
-# This is my first markdown file.
+# My first markdown file
 
 Hi, I am **Stas** _Kolenikov_. I use Markdown to:
 
@@ -284,7 +301,7 @@ in italics, and a short list of bulleted items.
 ## Solution
 
 ```
-# This is my first markdown file.
+# My first markdown file
 
 Hi, I am **FirstName** _LastName_. I am using Markdown to:
 
@@ -362,12 +379,13 @@ Compilation stage: instruct your software to...
 
 ???
 
-So I've been saying a lot how great it is that you can incorporate
-statistical output in markdown. How exactly does that happen? What you type
-is the narrative text and the code; but the code needs to be run.
-What is the magic that puts the numbers into the output? 
-We can call this step "compilation", or "rendering". In RStudio, it is 
-the "Knit" button.
+How exactly does this magic of putting statistical output into text happen? 
+What you type is the narrative text and the code; but the code needs to be run.
+We can call this step "compilation", or "rendering". 
+
+As I said in the introduction, this presentation is focused on R, 
+and the environment way preferred to anything else these days is RStudio.
+In RStudio, it is the "Knit" button.
 
 ---
 
@@ -545,7 +563,8 @@ The more advanced forms of markdown documents use inputs/parameters.
 - Input data files
 - Formatting specifications (e.g. colors to use)
 
-Parametric markdowns are to be used from command line / R scripts:
+Compilation of parametric markdown documents 
+is typically done from command line / R scripts:
 
 ```
 rmarkdown::render( ..., 
@@ -581,6 +600,13 @@ rmarkdown::render(
 
 PDF output requires a LaTeX compiler; not presented in this talk.
 
+???
+
+One easy degree of flexibility is that of output format:
+say HTML vs. MS Word. Rendering into one or the other 
+can be handled by the named options of the `render()` function.
+
+
 ---
 
 ## Parametric markdown: YAML header
@@ -601,9 +627,11 @@ output:
 
 ???
 
+The parametric or flexible interfaces of your document are contained
+in the YAML header. YAML stands for Yet Another Markup Language.
 Most of YAML header is fixed syntax with reserved keywords,
-such as `title`, `author`, `date`, `output`, and suboptions for 
-the different output formats.
+such as `title`, `author`, `date`, `output`, and fixed suboptions of these.
+Here, there are different suboptions for the different output formats.
 
 ---
 
@@ -666,6 +694,14 @@ main_data <- read.sav( params$data_source )
 
 ````
 
+???
+
+So one of the very common tasks that markdown documents are ideal for
+is re-running your analysis shell with different data sets ---
+in my example above, I ran it with two different months of KFF data.
+A brute force, soft of, approach to this is to pass the name of the file
+into the document via `params$data_source` full name.
+
 ---
 
 ## Parametric markdown: varying data
@@ -696,6 +732,15 @@ rmarkdown::render(input=paste0(filename_stub,.'Rmd'),   # input file
 )
 ```
 
+??? 
+
+If the file names follow a specific pattern, you can pass the 
+variable parts of that pattern instead. This may make more sense
+when the name of the output file is being varied in a similar pattern.
+Here, I am creating the output file name by combining the stub,
+the variable part (month), and I also time stamp it with the date
+baked into the file name.
+
 ---
 
 ## Hands-on: edit the KFF report
@@ -722,7 +767,7 @@ Several libraries available, with slightly differing functionality (and ease of 
 - `shower` 
     * easier to create self-contained presentation HTML files
     * not compatible with `flextable`
-- `xarnigan` (this presentation)
+- `xaringan` (this presentation)
     * not compatible with `shiny` interactive elements
     * presenter mode
 
@@ -762,6 +807,12 @@ class: inverse
 
 # A few words about version control
 
+??? 
+
+We have covered the basics of markdown and its interface with R.
+Now I wanted to briefly talk about an additional benefit I am finding
+in using markdown documents.
+
 ---
 
 ## Reasons for markdown
@@ -769,13 +820,32 @@ class: inverse
 1. Combine narrative and data analysis
 2. Reproduce your work (reports, revisions)
 3. Reuse the code with different options, sources, formatting, ...
-4. Version control over the plain text
+4. Version control over the plain text of markdown documents
+
+???
+
+So I mentioned earlier that computer scientists favorite format is
+plain text, for the simple reason that comparing text files,
+finding differences and updates is easier than say comparing two Excel files
+or two PDF files. This line of thinking culminates in the version control
+systems that computer scientists and software developers use to 
+develop code and isolate changes. Basically it's a way to remember
+every significant edit (not necessarily every keystroke, but maybe 
+updates of code that change its functionality or behavior in some way.)
+For instance, you wrote a new function -- you document that change
+and commit it to the memory of the version control system. You found
+a bug in your function -- you document that change and commit it.
+You fixed the bug -- you document that change and commit it.
 
 ---
 
 ## Reasons for markdown: version control
 
 ![](docs/rainman.jpg)
+
+???
+
+Computers can remember everything. Humans are not supposed to.
 
 ---
 
@@ -793,27 +863,13 @@ A complete introduction to using Git with RStudio
 
 class: inverse
 
-# Getting to use and rely on markdown
-
----
-
-## One foot in front of the other
-
-Gradual, incremental changes
-
-- convert a section / 3-5 tables/plots to R/RMarkdown per monthly report
-    * ask "how do I" questions on Abt MS Teams / Yammer, and/or
-    * ask "how do I" questions on Twitter, and/or
-    * ask "how do I" questions on RStudio community
-- type your meeting notes in a markdown editor
-    * Typora (offline)
-    * SlackEdit (online)
-
----
-
-class: inverse
-
 # Markdown and other languages
+
+???
+
+Another extension that I may or may not be able to talk about in full length
+is how markdown interfaces with other languages, and what other research
+tasks can be implemented with it.
 
 ---
 
@@ -825,8 +881,10 @@ class: inverse
 
 ## Markdown in other languages
 
-Stata: markstat
+Stata: 
 
+* official Stata markdown `<<dd-syntax>>`
+* user-contributed `markstat` (interface to Pandoc markdown) package,
 https://data.princeton.edu/stata/markdown
 
 (See Stas' [ICHPS 2020 Complex Surveys](https://github.com/skolenik/ICHPS2020-svy/blob/master/ichps2020-svy.stmd))
@@ -851,25 +909,49 @@ Diagrams: `mermaid` in Typora
 
 ![](http://support.typora.io/media/diagrams/js-sequence.png)
 
+???
+
+Sequence diagrams are intended to describe (and to some extent formalize)
+interactions between process or agents in a system.
+
 ---
 
 ## Sequence diagrams
 
 ````
 ```sequence
-Alice->Bob: Hello Bob, how are you?
+Alice -> Bob:      Hello Bob, how are you?
 Note right of Bob: Bob thinks
-Bob-->Alice: I am good thanks!
+Bob --> Alice:     I am good thanks!
 ```
 ````
 
 Try more at https://mermaid-js.github.io/mermaid-live-editor/
+
+???
+
+So the markdown code is pretty much literal: there are arrows,
+there is a description of a note and where it is positioned, and so on.
 
 ---
 
 ## Sequence diagrams
 
 ![](mrp.png)
+
+???
+
+My use of these markdown diagrams grew out of a need to systematize 
+the workflow of data in a small area estimation project. I had several
+sources of data and about 20 scripts interacting with one another
+(and some scripts actually wrote some code to be run automatically,
+and ran that code). The project reached a point where I really needed 
+to change things in several small places to address clients' comments,
+so I ended up spending several hours putting every script in a box,
+and explicate what the different scripts and functions were passing to one another.
+My diagram ended up being four letter size printouts taped to one another,
+I used it a lot for my own reference, and it was very handy to show off
+in a methods report, too.
 
 ---
 
@@ -896,6 +978,12 @@ head( py$flights )
 ```
 
 ````
+
+???
+
+Python and R can easily coexist in RStudio. Some people go as far as to say
+that RStudio is a solid Python editor (given that you use Google and online
+documentation, anyway, so the relevance of the "Help" window is not huge).
 
 ---
 
@@ -933,27 +1021,46 @@ class: inverse
 
 # In the spirit of reproducible reporting
 
+???
+
+One last point for reproducible reporting: 
+it is worthwhile keeping track of what exactly you used to 
+produce the results. You, of course, may have the code 
+at your fingertips, but anybody who had worked with R 
+knows that packages change, R changes, and sometimes stuff
+that worked before is broken now.
+
 ---
 
 ## Software citations
 
 R version: `r R.version.string`.
 
-Packages versions:
+Package versions:
 
 ```{r package_versions}
 pvers <- ''
 for( p in need_packages ) {
-  pvers <- paste0(pvers, '- library(',p, '):  version ', as.character(packageVersion(p)), '\n')
+  pvers <- paste0(pvers, 
+      '- library(',p, '):  version ', as.character(packageVersion(p)), 
+      '\n')
 }
 ```
 
 `r pvers`
 
+???
+
+So if you have had the good fortune of being able to run
+the code inside your markdown document without errors,
+it is advisable to jot down what the libraries and their versions are.
+
+Here is what I used in this presentation, and package versions at the compile time.
+
 ---
 
 ## Thanks
 
-Stas Kolenikov ([stas_kolenikov@abtassoc.com](stas_kolenikov@abtassoc.com))
+Stas Kolenikov ([skolenik@gmail.com](skolenik@gmail.com))
 
 Twitter [@StatStas](http://twitter.com/StatStas)
